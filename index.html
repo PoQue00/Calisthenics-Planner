@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Calisthenics Workout Planner</title>
     <style>
         :root {
@@ -19,16 +19,17 @@
             --accent-red: #f85149;
             --selected: #1f6feb;
             --selected-bg: #1f6feb22;
-            --card-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 4px 24px rgba(0, 0, 0, 0.4);
+            --card-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03), 0 6px 28px rgba(0, 0, 0, 0.5);
             --green-l0: #161b22;
             --green-l1: #0e4429;
             --green-l2: #006d32;
             --green-l3: #26a641;
             --green-l4: #39d353;
-            --radius: 12px;
-            --radius-sm: 8px;
-            --radius-xs: 4px;
-            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-xs: 6px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --glow-green: 0 0 18px rgba(63, 185, 80, 0.25);
         }
 
         * {
@@ -39,67 +40,81 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
-            background: var(--bg-primary);
+            background: radial-gradient(ellipse at 50% 0%, #1a2332 0%, #0d1117 70%);
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
         }
 
         /* Header */
         .header {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
+            background: rgba(22, 27, 34, 0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(48, 54, 61, 0.8);
             padding: 0 24px;
             position: sticky;
             top: 0;
             z-index: 100;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
         }
         .header-inner {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 60px;
-            gap: 16px;
+            height: 64px;
+            gap: 20px;
         }
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-weight: 700;
-            font-size: 1.25rem;
-            letter-spacing: -0.01em;
+            font-size: 1.3rem;
+            letter-spacing: -0.02em;
             color: var(--text-primary);
             white-space: nowrap;
         }
         .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--accent-green), #1a9e3a);
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #2ea44f, #1a7f37);
             border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.6rem;
+            box-shadow: 0 0 24px rgba(63, 185, 80, 0.35);
+            animation: logoPulse 3s ease-in-out infinite;
             flex-shrink: 0;
+        }
+        @keyframes logoPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 18px rgba(63, 185, 80, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 32px rgba(63, 185, 80, 0.55), 0 0 8px rgba(63, 185, 80, 0.2);
+            }
         }
         .nav-tabs {
             display: flex;
-            gap: 4px;
+            gap: 6px;
             background: var(--bg-tertiary);
-            border-radius: var(--radius-sm);
-            padding: 3px;
+            border-radius: 50px;
+            padding: 4px;
+            backdrop-filter: blur(4px);
         }
         .nav-tab {
-            padding: 8px 18px;
-            border-radius: 6px;
+            padding: 10px 22px;
+            border-radius: 50px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.9rem;
             border: none;
             background: transparent;
@@ -107,28 +122,30 @@
             transition: var(--transition);
             white-space: nowrap;
             letter-spacing: 0.01em;
+            position: relative;
         }
         .nav-tab:hover {
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            background: rgba(255, 255, 255, 0.06);
         }
         .nav-tab.active {
             background: var(--selected);
             color: #fff;
-            box-shadow: 0 2px 8px rgba(31, 111, 235, 0.4);
+            box-shadow: 0 4px 14px rgba(31, 111, 235, 0.5);
+            transform: translateY(-1px);
         }
 
         /* Main Container */
         .main-container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
-            padding: 24px 20px 40px;
+            padding: 28px 24px 48px;
         }
 
         /* Page Sections */
         .page {
             display: none;
-            animation: fadeSlideIn 0.35s ease;
+            animation: fadeSlideIn 0.4s ease;
         }
         .page.active {
             display: block;
@@ -136,37 +153,11 @@
         @keyframes fadeSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(12px);
+                transform: translateY(16px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
-            }
-        }
-
-        /* Planner Layout */
-        .planner-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            align-items: start;
-        }
-        @media (max-width: 850px) {
-            .planner-grid {
-                grid-template-columns: 1fr;
-            }
-            .header-inner {
-                flex-wrap: wrap;
-                height: auto;
-                padding: 10px 0;
-                gap: 10px;
-            }
-            .logo {
-                font-size: 1rem;
-            }
-            .nav-tab {
-                padding: 6px 12px;
-                font-size: 0.8rem;
             }
         }
 
@@ -175,26 +166,44 @@
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 20px 22px;
+            padding: 22px 24px;
             box-shadow: var(--card-shadow);
             transition: var(--transition);
+            backdrop-filter: blur(4px);
+        }
+        .card:hover {
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 8px 36px rgba(0, 0, 0, 0.7);
         }
         .card-header {
-            font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 16px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
             color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             letter-spacing: -0.01em;
         }
         .card-header .dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: var(--accent-green);
+            box-shadow: 0 0 10px var(--accent-green);
             flex-shrink: 0;
+        }
+
+        /* Planner Grid */
+        .planner-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 900px) {
+            .planner-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Calendar */
@@ -202,22 +211,23 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 14px;
-            gap: 8px;
+            margin-bottom: 16px;
+            gap: 10px;
         }
         .cal-month-label {
             font-weight: 700;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             letter-spacing: -0.01em;
-            min-width: 140px;
+            min-width: 150px;
             text-align: center;
         }
         .cal-nav-btn {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             border: 1px solid var(--border);
-            background: var(--bg-tertiary);
+            background: rgba(33, 38, 45, 0.7);
+            backdrop-filter: blur(6px);
             color: var(--text-primary);
             cursor: pointer;
             display: flex;
@@ -229,27 +239,27 @@
         .cal-nav-btn:hover {
             background: var(--border);
             border-color: var(--text-muted);
+            transform: scale(1.05);
         }
         .cal-nav-btn.today-btn {
             width: auto;
-            border-radius: 16px;
-            padding: 0 12px;
+            border-radius: 50px;
+            padding: 0 16px;
             font-size: 0.8rem;
-            font-weight: 500;
-            letter-spacing: 0.01em;
+            font-weight: 600;
         }
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 3px;
+            gap: 4px;
             text-align: center;
         }
         .cal-day-name {
             font-size: 0.7rem;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-muted);
             padding: 6px 0;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.03em;
             text-transform: uppercase;
         }
         .cal-day {
@@ -260,49 +270,43 @@
             justify-content: center;
             border-radius: var(--radius-xs);
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 500;
             position: relative;
-            transition: var(--transition);
+            transition: all 0.2s ease;
             color: var(--text-primary);
-            min-width: 32px;
-            user-select: none;
             border: 2px solid transparent;
+            background: rgba(22, 27, 34, 0.5);
         }
         .cal-day:hover {
             background: var(--bg-tertiary);
-            border-color: var(--border);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
         }
         .cal-day.other-month {
-            color: var(--text-muted);
-            opacity: 0.4;
-            cursor: default;
+            opacity: 0.3;
             pointer-events: none;
         }
         .cal-day.today {
             border: 2px solid var(--accent-blue) !important;
             font-weight: 700;
-            border-radius: var(--radius-xs);
+            box-shadow: 0 0 16px rgba(88, 166, 255, 0.25);
         }
         .cal-day.selected {
             background: var(--selected-bg) !important;
             border: 2px solid var(--selected) !important;
             font-weight: 700;
-            border-radius: var(--radius-xs);
-            box-shadow: 0 0 0 4px rgba(31, 111, 235, 0.12);
+            box-shadow: 0 0 18px rgba(31, 111, 235, 0.35);
         }
         .cal-day .exercise-dot {
             position: absolute;
-            bottom: 3px;
-            width: 5px;
-            height: 5px;
+            bottom: 4px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: var(--accent-green);
-            box-shadow: 0 0 6px rgba(63, 185, 80, 0.6);
-        }
-        .cal-day.today .exercise-dot,
-        .cal-day.selected .exercise-dot {
-            bottom: 5px;
+            box-shadow: 0 0 8px rgba(63, 185, 80, 0.7);
         }
 
         /* Exercise Form */
@@ -311,163 +315,133 @@
         }
         .form-label {
             display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.75rem;
+            font-weight: 700;
             color: var(--text-secondary);
-            margin-bottom: 5px;
-            letter-spacing: 0.02em;
+            margin-bottom: 6px;
+            letter-spacing: 0.03em;
             text-transform: uppercase;
         }
         .form-input,
         .form-select {
             width: 100%;
-            padding: 10px 14px;
-            background: var(--bg-tertiary);
+            padding: 12px 16px;
+            background: rgba(33, 38, 45, 0.8);
+            backdrop-filter: blur(6px);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             color: var(--text-primary);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-family: inherit;
             transition: var(--transition);
             appearance: none;
-            -webkit-appearance: none;
         }
         .form-input:focus,
         .form-select:focus {
             outline: none;
             border-color: var(--accent-blue);
-            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+            box-shadow: 0 0 0 4px rgba(88, 166, 255, 0.15);
         }
         .form-select {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 12px center;
-            padding-right: 36px;
+            background-position: right 16px center;
+            padding-right: 44px;
             cursor: pointer;
         }
-        .form-select option {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            padding: 8px;
-            font-weight: 500;
-        }
-        .form-select optgroup {
-            font-weight: 700;
-            color: var(--accent-blue);
-            font-style: normal;
-            letter-spacing: 0.02em;
-        }
         .btn {
-            padding: 10px 20px;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
             font-size: 0.9rem;
             cursor: pointer;
             border: none;
             transition: var(--transition);
-            letter-spacing: 0.01em;
+            letter-spacing: 0.02em;
             font-family: inherit;
         }
         .btn-primary {
-            background: var(--accent-green);
-            color: #000;
+            background: linear-gradient(135deg, #2ea44f, #1a7f37);
+            color: #fff;
             width: 100%;
-            box-shadow: 0 2px 12px rgba(63, 185, 80, 0.25);
+            box-shadow: 0 6px 20px rgba(46, 164, 79, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .btn-primary:hover {
-            background: #4cc960;
-            box-shadow: 0 4px 20px rgba(63, 185, 80, 0.4);
-            transform: translateY(-1px);
+            background: linear-gradient(135deg, #3cb95f, #228b3a);
+            box-shadow: 0 8px 28px rgba(46, 164, 79, 0.6);
+            transform: translateY(-2px);
         }
         .btn-primary:active {
             transform: translateY(0);
-            box-shadow: 0 1px 6px rgba(63, 185, 80, 0.2);
         }
         .btn-delete {
             background: transparent;
             color: var(--accent-red);
             border: 1px solid transparent;
-            padding: 4px 10px;
-            font-size: 0.75rem;
-            border-radius: var(--radius-xs);
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 50px;
             cursor: pointer;
             transition: var(--transition);
+            font-weight: 600;
         }
         .btn-delete:hover {
-            background: rgba(248, 81, 73, 0.1);
-            border-color: rgba(248, 81, 73, 0.3);
+            background: rgba(248, 81, 73, 0.12);
+            border-color: rgba(248, 81, 73, 0.4);
+            color: #ff6b6b;
         }
 
         /* Exercise List */
         .exercise-list {
             list-style: none;
-            max-height: 350px;
+            max-height: 400px;
             overflow-y: auto;
             scrollbar-width: thin;
             scrollbar-color: var(--border) transparent;
-        }
-        .exercise-list::-webkit-scrollbar {
-            width: 5px;
-        }
-        .exercise-list::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .exercise-list::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 10px;
         }
         .exercise-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            padding: 10px 12px;
+            gap: 12px;
+            padding: 10px 14px;
             border-radius: var(--radius-sm);
             margin-bottom: 6px;
-            background: var(--bg-tertiary);
+            background: rgba(33, 38, 45, 0.6);
+            backdrop-filter: blur(4px);
             border: 1px solid transparent;
             transition: var(--transition);
             flex-wrap: wrap;
         }
         .exercise-item:hover {
             border-color: var(--border);
-            background: var(--bg-secondary);
-        }
-        .exercise-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 0;
+            background: rgba(33, 38, 45, 0.9);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
         }
         .exercise-time-badge {
             background: var(--selected-bg);
             color: var(--accent-blue);
-            font-weight: 600;
-            font-size: 0.78rem;
-            padding: 3px 8px;
-            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 50px;
             white-space: nowrap;
-            letter-spacing: 0.02em;
         }
         .exercise-name {
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.9rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         .exercise-value {
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.85rem;
             color: var(--accent-green);
-            white-space: nowrap;
         }
         .exercise-type-badge {
-            font-size: 0.7rem;
-            padding: 2px 7px;
-            border-radius: 10px;
-            font-weight: 500;
+            font-size: 0.65rem;
+            padding: 3px 9px;
+            border-radius: 50px;
+            font-weight: 600;
             letter-spacing: 0.02em;
             white-space: nowrap;
         }
@@ -479,35 +453,21 @@
             background: rgba(210, 153, 29, 0.15);
             color: var(--accent-orange);
         }
-        .no-exercises {
-            text-align: center;
-            padding: 30px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-        .no-exercises .icon {
-            font-size: 2.5rem;
-            display: block;
-            margin-bottom: 10px;
-            opacity: 0.6;
-        }
-        .selected-date-display {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--accent-blue);
-            letter-spacing: -0.01em;
-            margin-bottom: 4px;
-        }
 
-        /* Contribution Graph */
+        /* Graph Container */
+        .graph-card {
+            overflow: hidden;
+        }
         .graph-container {
             overflow-x: auto;
-            padding: 10px 0;
+            -webkit-overflow-scrolling: touch;
+            max-width: 100%;
+            padding: 8px 4px;
             scrollbar-width: thin;
             scrollbar-color: var(--border) transparent;
         }
         .graph-container::-webkit-scrollbar {
-            height: 5px;
+            height: 6px;
         }
         .graph-container::-webkit-scrollbar-track {
             background: transparent;
@@ -520,70 +480,64 @@
             display: flex;
             gap: 0;
             min-width: fit-content;
+            touch-action: pan-y pinch-zoom;
         }
         .graph-labels {
             display: flex;
             flex-direction: column;
-            gap: 2px;
-            margin-right: 6px;
-            padding-top: 20px;
+            gap: 3px;
+            margin-right: 8px;
+            padding-top: 22px;
         }
         .graph-label {
-            height: 13px;
-            font-size: 0.65rem;
+            height: 14px;
+            font-size: 0.7rem;
             color: var(--text-muted);
-            line-height: 13px;
+            line-height: 14px;
             letter-spacing: 0.02em;
-            display: flex;
-            align-items: center;
         }
         .graph-weeks {
             display: flex;
-            gap: 2px;
-            flex-direction: row;
+            gap: 3px;
         }
         .graph-week {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 3px;
         }
         .graph-cell {
-            width: 13px;
-            height: 13px;
-            border-radius: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
             background: var(--green-l0);
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             position: relative;
             flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
         .graph-cell:hover {
-            outline: 2px solid rgba(255, 255, 255, 0.5);
+            outline: 2px solid rgba(255, 255, 255, 0.7);
             outline-offset: 1px;
             z-index: 5;
-            transform: scale(1.3);
-            border-radius: 3px;
+            transform: scale(1.4);
+            border-radius: 4px;
         }
         .graph-cell.level-0 {
             background: var(--green-l0);
-            border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .graph-cell.level-1 {
             background: var(--green-l1);
-            border: 1px solid rgba(255, 255, 255, 0.06);
         }
         .graph-cell.level-2 {
             background: var(--green-l2);
-            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .graph-cell.level-3 {
             background: var(--green-l3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .graph-cell.level-4 {
             background: var(--green-l4);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 0 6px rgba(57, 211, 83, 0.3);
+            box-shadow: 0 0 8px rgba(57, 211, 83, 0.5);
         }
         .graph-cell.future {
             opacity: 0.25;
@@ -591,89 +545,157 @@
         }
         .graph-months {
             display: flex;
-            gap: 0;
-            margin-bottom: 6px;
-            padding-left: 28px;
+            margin-bottom: 8px;
+            padding-left: 32px;
+            position: relative;
         }
         .graph-month-label {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
-            letter-spacing: 0.02em;
+            letter-spacing: 0.03em;
+            position: absolute;
         }
         .graph-legend {
             display: flex;
             align-items: center;
             gap: 6px;
             justify-content: flex-end;
-            margin-top: 10px;
+            margin-top: 14px;
             font-size: 0.7rem;
             color: var(--text-muted);
             letter-spacing: 0.02em;
         }
         .legend-cell {
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
             flex-shrink: 0;
         }
         .graph-tooltip {
             position: fixed;
-            background: #1c2128;
+            background: rgba(22, 27, 34, 0.95);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--border);
             color: var(--text-primary);
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 500;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
             pointer-events: none;
             z-index: 200;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
             white-space: nowrap;
-            letter-spacing: 0.01em;
+            letter-spacing: 0.02em;
             opacity: 0;
-            transition: opacity 0.1s ease;
+            transition: opacity 0.2s ease;
         }
         .graph-tooltip.visible {
             opacity: 1;
         }
-        .graph-stats {
-            display: flex;
+
+        /* Library Page */
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
+            margin-top: 8px;
         }
-        .stat-item {
+        .exercise-card {
+            background: rgba(22, 27, 34, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .exercise-card:hover {
+            border-color: rgba(88, 166, 255, 0.4);
+            box-shadow: 0 0 28px rgba(31, 111, 235, 0.15);
+            transform: translateY(-4px);
+        }
+        .exercise-card-header {
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+            justify-content: space-between;
         }
-        .stat-value {
+        .exercise-card-title {
             font-weight: 700;
-            color: var(--accent-green);
-            font-size: 1.1rem;
+            font-size: 1rem;
+            letter-spacing: -0.01em;
+        }
+        .exercise-card-badge {
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .muscle-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .muscle-tag {
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--accent-blue);
+            font-size: 0.7rem;
+            padding: 3px 9px;
+            border-radius: 50px;
+            font-weight: 500;
+            border: 1px solid rgba(88, 166, 255, 0.2);
+        }
+        .difficulty-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .difficulty-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            flex: 1;
+            overflow: hidden;
+        }
+        .difficulty-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #3fb950, #d2991d, #f85149);
+            transition: width 0.3s ease;
+        }
+        .difficulty-text {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            min-width: 40px;
+        }
+        .exercise-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
         }
 
         /* Toast */
         .toast {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
+            bottom: 28px;
+            right: 28px;
             background: var(--accent-green);
             color: #000;
-            padding: 12px 20px;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
+            padding: 14px 24px;
+            border-radius: 50px;
+            font-weight: 700;
             font-size: 0.9rem;
             z-index: 300;
-            box-shadow: 0 8px 30px rgba(63, 185, 80, 0.5);
+            box-shadow: 0 12px 36px rgba(63, 185, 80, 0.6);
             animation: toastIn 0.4s ease, toastOut 0.4s ease 2s forwards;
-            letter-spacing: 0.01em;
+            letter-spacing: 0.02em;
         }
         @keyframes toastIn {
             from {
-                transform: translateY(40px);
+                transform: translateY(50px);
                 opacity: 0;
             }
             to {
@@ -687,28 +709,52 @@
                 opacity: 1;
             }
             to {
-                transform: translateY(40px);
+                transform: translateY(50px);
                 opacity: 0;
             }
-        }
-        .exercise-item {
-            animation: itemIn 0.3s ease;
         }
         @keyframes itemIn {
             from {
                 opacity: 0;
-                transform: translateX(-10px);
+                transform: translateX(-12px);
             }
             to {
                 opacity: 1;
                 transform: translateX(0);
             }
         }
+        .exercise-item {
+            animation: itemIn 0.3s ease;
+        }
+
+        @media (max-width: 700px) {
+            .header-inner {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 10px 0;
+                gap: 8px;
+            }
+            .nav-tab {
+                padding: 8px 14px;
+                font-size: 0.75rem;
+            }
+            .library-grid {
+                grid-template-columns: 1fr;
+            }
+            .graph-cell {
+                width: 12px;
+                height: 12px;
+            }
+            .graph-label {
+                height: 12px;
+            }
+            .graph-labels {
+                padding-top: 20px;
+            }
+        }
     </style>
 </head>
 <body>
-
-    <!-- Header -->
     <header class="header">
         <div class="header-inner">
             <div class="logo">
@@ -717,37 +763,32 @@
             </div>
             <nav class="nav-tabs">
                 <button class="nav-tab active" data-page="planner" onclick="switchPage('planner')">📅 Planner</button>
-                <button class="nav-tab" data-page="graph" onclick="switchPage('graph')">📊 Activity Graph</button>
+                <button class="nav-tab" data-page="graph" onclick="switchPage('graph')">📊 Activity</button>
+                <button class="nav-tab" data-page="library" onclick="switchPage('library')">📚 Exercises</button>
             </nav>
         </div>
     </header>
 
-    <!-- Main Content -->
     <div class="main-container">
         <!-- Planner Page -->
         <div class="page active" id="page-planner">
             <div class="planner-grid">
-                <!-- Calendar Card -->
                 <div class="card">
                     <div class="card-header"><span class="dot"></span> Select a Day</div>
                     <div class="calendar-nav">
-                        <button class="cal-nav-btn" onclick="changeMonth(-1)" title="Previous Month">◀</button>
+                        <button class="cal-nav-btn" onclick="changeMonth(-1)">◀</button>
                         <span class="cal-month-label" id="calMonthLabel">May 2026</span>
-                        <button class="cal-nav-btn" onclick="changeMonth(1)" title="Next Month">▶</button>
+                        <button class="cal-nav-btn" onclick="changeMonth(1)">▶</button>
                         <button class="cal-nav-btn today-btn" onclick="goToToday()">Today</button>
                     </div>
                     <div class="calendar-grid" id="calendarGrid"></div>
-                    <div style="margin-top:12px;text-align:center;font-size:0.75rem;color:var(--text-muted);">
-                        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent-green);margin-right:4px;vertical-align:middle;"></span> = Has exercises
+                    <div style="margin-top:14px;text-align:center;font-size:0.75rem;color:var(--text-muted);">
+                        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent-green);margin-right:6px;vertical-align:middle;box-shadow:0 0 6px #3fb950;"></span> = has workouts
                     </div>
                 </div>
-
-                <!-- Exercise Panel -->
                 <div class="card" id="exercisePanel">
                     <div class="card-header"><span class="dot"></span> Exercises for <span class="selected-date-display" id="selectedDateDisplay">—</span></div>
-                    <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;" id="selectPrompt">👆 Select a day on the calendar to add exercises</p>
-
-                    <!-- Add Exercise Form -->
+                    <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;" id="selectPrompt">👆 Select a day to add exercises</p>
                     <div id="exerciseForm" style="display:none;">
                         <div class="form-group">
                             <label class="form-label">⏰ Time</label>
@@ -756,7 +797,7 @@
                         <div class="form-group">
                             <label class="form-label">🏋️ Exercise</label>
                             <select class="form-select" id="exerciseSelect" onchange="onExerciseChange()">
-                                <optgroup label="── Rep-Based Exercises ──">
+                                <optgroup label="── Rep-Based ──">
                                     <option value="Push-ups">Push-ups</option>
                                     <option value="Diamond Push-ups">Diamond Push-ups</option>
                                     <option value="Wide Push-ups">Wide Push-ups</option>
@@ -765,32 +806,20 @@
                                     <option value="Pull-ups">Pull-ups</option>
                                     <option value="Chin-ups">Chin-ups</option>
                                     <option value="Commando Pull-ups">Commando Pull-ups</option>
-                                    <option value="Typewriter Pull-ups">Typewriter Pull-ups</option>
                                     <option value="Dips">Dips</option>
-                                    <option value="Tricep Dips">Tricep Dips</option>
                                     <option value="Squats">Squats</option>
-                                    <option value="Jump Squats">Jump Squats</option>
                                     <option value="Pistol Squats">Pistol Squats</option>
-                                    <option value="Shrimp Squats">Shrimp Squats</option>
                                     <option value="Lunges">Lunges</option>
-                                    <option value="Bulgarian Split Squats">Bulgarian Split Squats</option>
                                     <option value="Burpees">Burpees</option>
                                     <option value="Mountain Climbers">Mountain Climbers</option>
-                                    <option value="Jumping Jacks">Jumping Jacks</option>
                                     <option value="Crunches">Crunches</option>
-                                    <option value="Bicycle Crunches">Bicycle Crunches</option>
                                     <option value="Leg Raises">Leg Raises</option>
                                     <option value="Russian Twists">Russian Twists</option>
                                     <option value="Calf Raises">Calf Raises</option>
-                                    <option value="Glute Bridges">Glute Bridges</option>
                                     <option value="Box Jumps">Box Jumps</option>
-                                    <option value="Star Jumps">Star Jumps</option>
-                                    <option value="Bear Crawls (meters)">Bear Crawls (meters)</option>
                                     <option value="Inchworms">Inchworms</option>
-                                    <option value="Nordic Curls (assisted)">Nordic Curls (assisted)</option>
-                                    <option value="Sissy Squats">Sissy Squats</option>
                                 </optgroup>
-                                <optgroup label="── Time-Based Exercises ──">
+                                <optgroup label="── Time-Based ──">
                                     <option value="Plank">Plank</option>
                                     <option value="Side Plank (Left)">Side Plank (Left)</option>
                                     <option value="Side Plank (Right)">Side Plank (Right)</option>
@@ -802,11 +831,8 @@
                                     <option value="V-Sit">V-Sit</option>
                                     <option value="Bridge Hold">Bridge Hold</option>
                                     <option value="Crow Pose">Crow Pose</option>
-                                    <option value="Frog Stand">Frog Stand</option>
                                     <option value="Handstand Hold">Handstand Hold</option>
                                     <option value="Flexed Arm Hang">Flexed Arm Hang</option>
-                                    <option value="Arch Hold">Arch Hold</option>
-                                    <option value="Chin-up Hold">Chin-up Hold</option>
                                 </optgroup>
                             </select>
                         </div>
@@ -816,18 +842,16 @@
                         </div>
                         <button class="btn btn-primary" onclick="addExercise()">➕ Add Exercise</button>
                     </div>
-
-                    <!-- Exercise List -->
-                    <ul class="exercise-list" id="exerciseList" style="margin-top:16px;"></ul>
+                    <ul class="exercise-list" id="exerciseList" style="margin-top:18px;"></ul>
                 </div>
             </div>
         </div>
 
         <!-- Graph Page -->
         <div class="page" id="page-graph">
-            <div class="card">
-                <div class="card-header"><span class="dot"></span> Exercise Activity — GitHub-Style Heatmap</div>
-                <div class="graph-stats" id="graphStats">
+            <div class="card graph-card">
+                <div class="card-header"><span class="dot"></span> Exercise Activity — GitHub‑Style Heatmap</div>
+                <div class="graph-stats" id="graphStats" style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px;">
                     <div class="stat-item">🏆 Total Workouts: <span class="stat-value" id="statTotal">0</span></div>
                     <div class="stat-item">🔥 Current Streak: <span class="stat-value" id="statStreak">0</span> days</div>
                     <div class="stat-item">📅 Most Active Day: <span class="stat-value" id="statBest">—</span></div>
@@ -841,7 +865,7 @@
                 </div>
                 <div class="graph-legend">
                     Less
-                    <span class="legend-cell" style="background:var(--green-l0);border:1px solid rgba(255,255,255,0.04);"></span>
+                    <span class="legend-cell" style="background:var(--green-l0);"></span>
                     <span class="legend-cell" style="background:var(--green-l1);"></span>
                     <span class="legend-cell" style="background:var(--green-l2);"></span>
                     <span class="legend-cell" style="background:var(--green-l3);"></span>
@@ -850,12 +874,17 @@
                 </div>
             </div>
         </div>
+
+        <!-- Library Page -->
+        <div class="page" id="page-library">
+            <div class="card">
+                <div class="card-header"><span class="dot"></span> Exercise Directory</div>
+                <div class="library-grid" id="libraryGrid"></div>
+            </div>
+        </div>
     </div>
 
-    <!-- Tooltip for graph -->
     <div class="graph-tooltip" id="graphTooltip"></div>
-
-    <!-- Toast container -->
     <div id="toastContainer"></div>
 
     <script>
@@ -864,22 +893,92 @@
             // DATA & STATE
             // ───────────────────────────────────────
             const STORAGE_KEY = 'calisthenicsWorkoutData';
-            let workoutData = {}; // { "YYYY-MM-DD": [{id, time, exercise, type, value}] }
-            let selectedDate = null; // "YYYY-MM-DD"
-            let calendarMonth = new Date().getMonth(); // 0-indexed
+            let workoutData = {};
+            let selectedDate = null;
+            let calendarMonth = new Date().getMonth();
             let calendarYear = new Date().getFullYear();
             let currentPage = 'planner';
 
-            // Time-based exercises set
             const timeBasedExercises = new Set([
                 'Plank', 'Side Plank (Left)', 'Side Plank (Right)', 'Wall Sit', 'Dead Hang',
                 'Hollow Body Hold', 'Superman Hold', 'L-Sit', 'V-Sit', 'Bridge Hold',
-                'Crow Pose', 'Frog Stand', 'Handstand Hold', 'Flexed Arm Hang',
-                'Arch Hold', 'Chin-up Hold'
+                'Crow Pose', 'Frog Stand', 'Handstand Hold', 'Flexed Arm Hang', 'Arch Hold', 'Chin-up Hold'
             ]);
 
-            function getExerciseType(exerciseName) {
-                return timeBasedExercises.has(exerciseName) ? 'time' : 'reps';
+            // ───────────────────────────────────────
+            // EXERCISE LIBRARY DATA
+            // ───────────────────────────────────────
+            const exerciseLibrary = [
+                { name: 'Push-ups', type: 'reps', muscles: 'Chest, Triceps, Shoulders',
+                    desc: 'Classic bodyweight push-up. Builds upper body pushing strength.', difficulty: 3 },
+                { name: 'Diamond Push-ups', type: 'reps', muscles: 'Triceps, Chest',
+                    desc: 'Hands close together forming a diamond shape; emphasizes triceps.', difficulty: 5 },
+                { name: 'Wide Push-ups', type: 'reps', muscles: 'Chest, Front Delts',
+                    desc: 'Hands wider than shoulder-width; targets outer chest.', difficulty: 4 },
+                { name: 'Pike Push-ups', type: 'reps', muscles: 'Shoulders, Triceps',
+                    desc: 'Hips high, body in pike position; simulates overhead press.', difficulty: 6 },
+                { name: 'Archer Push-ups', type: 'reps', muscles: 'Chest, Triceps, Core',
+                    desc: 'One arm extended, other bent; builds unilateral strength.', difficulty: 7 },
+                { name: 'Pull-ups', type: 'reps', muscles: 'Lats, Biceps, Upper Back',
+                    desc: 'Overhand grip pull-up; essential vertical pulling exercise.', difficulty: 6 },
+                { name: 'Chin-ups', type: 'reps', muscles: 'Biceps, Lats',
+                    desc: 'Underhand grip; slightly easier than pull-ups, bicep focused.', difficulty: 5 },
+                { name: 'Commando Pull-ups', type: 'reps', muscles: 'Lats, Biceps, Grip',
+                    desc: 'Alternating grip, head moves side to side; builds rotational strength.', difficulty: 7 },
+                { name: 'Dips', type: 'reps', muscles: 'Triceps, Chest, Shoulders',
+                    desc: 'Parallel bar dip; powerful compound push movement.', difficulty: 5 },
+                { name: 'Squats', type: 'reps', muscles: 'Quads, Glutes, Core',
+                    desc: 'Bodyweight squat; fundamental lower body movement.', difficulty: 2 },
+                { name: 'Pistol Squats', type: 'reps', muscles: 'Quads, Glutes, Balance',
+                    desc: 'Single-leg squat; requires strength and mobility.', difficulty: 8 },
+                { name: 'Lunges', type: 'reps', muscles: 'Quads, Hamstrings, Glutes',
+                    desc: 'Forward/backward lunge; improves leg strength and stability.', difficulty: 3 },
+                { name: 'Burpees', type: 'reps', muscles: 'Full Body, Cardio',
+                    desc: 'Squat, plank, push-up, jump; high-intensity full-body conditioner.', difficulty: 7 },
+                { name: 'Mountain Climbers', type: 'reps', muscles: 'Core, Shoulders, Hip Flexors',
+                    desc: 'Plank position with alternating knee drives; great cardio.', difficulty: 4 },
+                { name: 'Crunches', type: 'reps', muscles: 'Abdominals',
+                    desc: 'Basic abdominal crunch; isolates upper abs.', difficulty: 2 },
+                { name: 'Leg Raises', type: 'reps', muscles: 'Lower Abs, Hip Flexors',
+                    desc: 'Lying leg raise; targets lower abdominal region.', difficulty: 4 },
+                { name: 'Russian Twists', type: 'reps', muscles: 'Obliques, Core',
+                    desc: 'Seated twisting motion; strengthens rotational core muscles.', difficulty: 3 },
+                { name: 'Calf Raises', type: 'reps', muscles: 'Calves',
+                    desc: 'Standing heel raise; builds calf strength and endurance.', difficulty: 1 },
+                { name: 'Box Jumps', type: 'reps', muscles: 'Quads, Glutes, Explosiveness',
+                    desc: 'Jump onto box/step; plyometric power exercise.', difficulty: 5 },
+                { name: 'Inchworms', type: 'reps', muscles: 'Full Body Mobility',
+                    desc: 'Walk hands out to plank and back; dynamic stretch and core.', difficulty: 2 },
+                { name: 'Plank', type: 'time', muscles: 'Core, Shoulders, Stability',
+                    desc: 'Hold push-up position; builds isometric core endurance.', difficulty: 3 },
+                { name: 'Side Plank (Left)', type: 'time', muscles: 'Obliques, Shoulder',
+                    desc: 'Lateral plank on left arm; targets obliques.', difficulty: 4 },
+                { name: 'Side Plank (Right)', type: 'time', muscles: 'Obliques, Shoulder',
+                    desc: 'Lateral plank on right arm; targets obliques.', difficulty: 4 },
+                { name: 'Wall Sit', type: 'time', muscles: 'Quads, Glutes',
+                    desc: 'Sit against wall at 90°; isometric leg endurance.', difficulty: 4 },
+                { name: 'Dead Hang', type: 'time', muscles: 'Grip, Shoulders, Back',
+                    desc: 'Hang from bar; improves grip and spinal decompression.', difficulty: 2 },
+                { name: 'Hollow Body Hold', type: 'time', muscles: 'Core, Lower Back',
+                    desc: 'Lie on back, arms/legs raised; foundational gymnastics hold.', difficulty: 5 },
+                { name: 'Superman Hold', type: 'time', muscles: 'Lower Back, Glutes',
+                    desc: 'Prone hold with arms/legs lifted; strengthens posterior chain.', difficulty: 3 },
+                { name: 'L-Sit', type: 'time', muscles: 'Core, Hip Flexors, Triceps',
+                    desc: 'Hold legs straight out while supported; advanced compression.', difficulty: 8 },
+                { name: 'V-Sit', type: 'time', muscles: 'Core, Hip Flexors',
+                    desc: 'Balance with legs and torso forming V; extreme core control.', difficulty: 9 },
+                { name: 'Bridge Hold', type: 'time', muscles: 'Glutes, Hamstrings, Back',
+                    desc: 'Hip thrust hold; glute bridge isometric variation.', difficulty: 2 },
+                { name: 'Crow Pose', type: 'time', muscles: 'Wrists, Core, Balance',
+                    desc: 'Yoga arm balance; builds wrist strength and control.', difficulty: 7 },
+                { name: 'Handstand Hold', type: 'time', muscles: 'Shoulders, Core, Balance',
+                    desc: 'Freestanding handstand; requires full body tension.', difficulty: 9 },
+                { name: 'Flexed Arm Hang', type: 'time', muscles: 'Biceps, Back, Grip',
+                    desc: 'Hold chin above bar; isometric pulling endurance.', difficulty: 6 }
+            ];
+
+            function getExerciseType(name) {
+                return timeBasedExercises.has(name) ? 'time' : 'reps';
             }
 
             function formatValue(type, value) {
@@ -887,25 +986,20 @@
                     const secs = parseInt(value);
                     if (secs >= 60) {
                         const mins = Math.floor(secs / 60);
-                        const remSecs = secs % 60;
-                        return remSecs > 0 ? `${mins}m ${remSecs}s` : `${mins}m`;
+                        const rem = secs % 60;
+                        return rem > 0 ? `${mins}m ${rem}s` : `${mins}m`;
                     }
                     return `${secs}s`;
                 }
                 return `${value} reps`;
             }
 
-            function getValueUnit(type) {
-                return type === 'time' ? 'seconds' : 'reps';
-            }
-
             // ───────────────────────────────────────
-            // LOCAL STORAGE
+            // STORAGE
             // ───────────────────────────────────────
             function loadData() {
                 try {
-                    const raw = localStorage.getItem(STORAGE_KEY);
-                    workoutData = raw ? JSON.parse(raw) : {};
+                    workoutData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
                 } catch (e) {
                     workoutData = {};
                 }
@@ -915,7 +1009,7 @@
                 try {
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(workoutData));
                 } catch (e) {
-                    showToast('⚠️ Could not save data (storage full?)');
+                    showToast('⚠️ Storage full');
                 }
             }
 
@@ -924,17 +1018,13 @@
             }
 
             function setExercisesForDate(dateStr, exercises) {
-                if (exercises.length === 0) {
-                    delete workoutData[dateStr];
-                } else {
-                    workoutData[dateStr] = exercises;
-                }
+                if (exercises.length === 0) delete workoutData[dateStr];
+                else workoutData[dateStr] = exercises;
                 saveData();
             }
 
             function countExercisesForDate(dateStr) {
-                const exs = getExercisesForDate(dateStr);
-                return exs.length;
+                return getExercisesForDate(dateStr).length;
             }
 
             function generateId() {
@@ -944,127 +1034,130 @@
             // ───────────────────────────────────────
             // TOAST
             // ───────────────────────────────────────
-            function showToast(message) {
+            function showToast(msg) {
                 const container = document.getElementById('toastContainer');
                 const toast = document.createElement('div');
                 toast.className = 'toast';
-                toast.textContent = message;
+                toast.textContent = msg;
                 container.appendChild(toast);
-                setTimeout(() => {
-                    if (toast.parentNode) toast.remove();
-                }, 2500);
+                setTimeout(() => { if (toast.parentNode) toast.remove(); }, 2500);
             }
 
             // ───────────────────────────────────────
             // PAGE SWITCHING
             // ───────────────────────────────────────
-            window.switchPage = function(pageName) {
-                currentPage = pageName;
+            window.switchPage = function(page) {
+                currentPage = page;
                 document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                document.getElementById('page-' + pageName).classList.add('active');
-                document.querySelector(`.nav-tab[data-page="${pageName}"]`).classList.add('active');
-                if (pageName === 'graph') {
-                    renderGraph();
-                }
-                if (pageName === 'planner') {
+                document.getElementById('page-' + page).classList.add('active');
+                document.querySelector(`.nav-tab[data-page="${page}"]`).classList.add('active');
+                if (page === 'graph') renderGraph();
+                if (page === 'library') renderLibrary();
+                if (page === 'planner') {
                     renderCalendar();
                     updateExercisePanel();
                 }
             };
 
             // ───────────────────────────────────────
-            // CALENDAR RENDERING
+            // LIBRARY RENDERING
+            // ───────────────────────────────────────
+            function renderLibrary() {
+                const grid = document.getElementById('libraryGrid');
+                grid.innerHTML = exerciseLibrary.map(ex => {
+                    const diffPercent = (ex.difficulty / 10) * 100;
+                    const typeBadge = ex.type === 'time' ?
+                        '<span class="exercise-card-badge badge-time">⏱ Time</span>' :
+                        '<span class="exercise-card-badge badge-reps">🔁 Reps</span>';
+                    return `
+                <div class="exercise-card">
+                  <div class="exercise-card-header">
+                    <span class="exercise-card-title">${ex.name}</span>
+                    ${typeBadge}
+                  </div>
+                  <div class="muscle-tags">${ex.muscles.split(', ').map(m => `<span class="muscle-tag">${m}</span>`).join('')}</div>
+                  <div class="exercise-desc">${ex.desc}</div>
+                  <div class="difficulty-bar-container">
+                    <span style="font-size:0.7rem;color:var(--text-muted);">Difficulty</span>
+                    <div class="difficulty-bar"><div class="difficulty-fill" style="width:${diffPercent}%;"></div></div>
+                    <span class="difficulty-text">${ex.difficulty}/10</span>
+                  </div>
+                </div>`;
+                }).join('');
+            }
+
+            // ───────────────────────────────────────
+            // CALENDAR
             // ───────────────────────────────────────
             function renderCalendar() {
                 const grid = document.getElementById('calendarGrid');
                 const label = document.getElementById('calMonthLabel');
-                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'
+                const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+                    'October', 'November', 'December'
                 ];
-                label.textContent = monthNames[calendarMonth] + ' ' + calendarYear;
+                label.textContent = months[calendarMonth] + ' ' + calendarYear;
 
                 const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                let html = '';
-                dayNames.forEach(d => {
-                    html += `<div class="cal-day-name">${d}</div>`;
-                });
+                let html = dayNames.map(d => `<div class="cal-day-name">${d}</div>`).join('');
 
                 const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
                 const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
-                const daysInPrevMonth = new Date(calendarYear, calendarMonth, 0).getDate();
+                const daysInPrev = new Date(calendarYear, calendarMonth, 0).getDate();
                 const today = new Date();
                 const todayStr = formatDateStr(today.getFullYear(), today.getMonth(), today.getDate());
 
-                // Previous month fill
                 for (let i = firstDay - 1; i >= 0; i--) {
-                    const day = daysInPrevMonth - i;
+                    const d = daysInPrev - i;
                     const m = calendarMonth === 0 ? 11 : calendarMonth - 1;
                     const y = calendarMonth === 0 ? calendarYear - 1 : calendarYear;
-                    const dateStr = formatDateStr(y, m, day);
-                    const hasEx = countExercisesForDate(dateStr) > 0;
+                    const ds = formatDateStr(y, m, d);
                     html +=
-                        `<div class="cal-day other-month" data-date="${dateStr}">${day}${hasEx ? '<span class="exercise-dot"></span>' : ''}</div>`;
+                        `<div class="cal-day other-month" data-date="${ds}">${d}${countExercisesForDate(ds)>0?'<span class="exercise-dot"></span>':''}</div>`;
                 }
-
-                // Current month
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const dateStr = formatDateStr(calendarYear, calendarMonth, day);
-                    const isToday = dateStr === todayStr;
-                    const isSelected = dateStr === selectedDate;
-                    const hasEx = countExercisesForDate(dateStr) > 0;
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const ds = formatDateStr(calendarYear, calendarMonth, d);
+                    const isToday = ds === todayStr;
+                    const isSel = ds === selectedDate;
                     let cls = 'cal-day';
                     if (isToday) cls += ' today';
-                    if (isSelected) cls += ' selected';
+                    if (isSel) cls += ' selected';
                     html +=
-                        `<div class="${cls}" data-date="${dateStr}" onclick="selectDate('${dateStr}')">${day}${hasEx ? '<span class="exercise-dot"></span>' : ''}</div>`;
+                        `<div class="${cls}" data-date="${ds}" onclick="selectDate('${ds}')">${d}${countExercisesForDate(ds)>0?'<span class="exercise-dot"></span>':''}</div>`;
                 }
-
-                // Next month fill
                 const totalCells = firstDay + daysInMonth;
-                const remaining = totalCells <= 35 ? 35 - totalCells : 42 - totalCells;
-                const totalGridCells = totalCells <= 35 ? 35 : 42;
-                // Actually, let's use 42 always for consistency
-                const finalRemaining = 42 - (firstDay + daysInMonth);
-                for (let day = 1; day <= finalRemaining; day++) {
+                const rem = 42 - totalCells;
+                for (let d = 1; d <= rem; d++) {
                     const m = calendarMonth === 11 ? 0 : calendarMonth + 1;
                     const y = calendarMonth === 11 ? calendarYear + 1 : calendarYear;
-                    const dateStr = formatDateStr(y, m, day);
-                    const hasEx = countExercisesForDate(dateStr) > 0;
+                    const ds = formatDateStr(y, m, d);
                     html +=
-                        `<div class="cal-day other-month" data-date="${dateStr}">${day}${hasEx ? '<span class="exercise-dot"></span>' : ''}</div>`;
+                        `<div class="cal-day other-month" data-date="${ds}">${d}${countExercisesForDate(ds)>0?'<span class="exercise-dot"></span>':''}</div>`;
                 }
-
                 grid.innerHTML = html;
             }
 
-            function formatDateStr(year, month, day) {
-                return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            function formatDateStr(y, m, d) {
+                return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
             }
 
-            window.selectDate = function(dateStr) {
-                selectedDate = dateStr;
+            window.selectDate = function(ds) {
+                selectedDate = ds;
                 renderCalendar();
                 updateExercisePanel();
             };
-
             window.changeMonth = function(delta) {
                 calendarMonth += delta;
-                if (calendarMonth < 0) {
-                    calendarMonth = 11;
-                    calendarYear--;
-                } else if (calendarMonth > 11) {
-                    calendarMonth = 0;
-                    calendarYear++;
-                }
+                if (calendarMonth < 0) { calendarMonth = 11;
+                    calendarYear--; } else if (calendarMonth > 11) { calendarMonth = 0;
+                    calendarYear++; }
                 renderCalendar();
             };
-
             window.goToToday = function() {
-                const today = new Date();
-                calendarMonth = today.getMonth();
-                calendarYear = today.getFullYear();
-                selectedDate = formatDateStr(today.getFullYear(), today.getMonth(), today.getDate());
+                const now = new Date();
+                calendarMonth = now.getMonth();
+                calendarYear = now.getFullYear();
+                selectedDate = formatDateStr(now.getFullYear(), now.getMonth(), now.getDate());
                 renderCalendar();
                 updateExercisePanel();
             };
@@ -1077,7 +1170,6 @@
                 const list = document.getElementById('exerciseList');
                 const display = document.getElementById('selectedDateDisplay');
                 const prompt = document.getElementById('selectPrompt');
-
                 if (!selectedDate) {
                     form.style.display = 'none';
                     list.innerHTML = '';
@@ -1085,213 +1177,141 @@
                     prompt.style.display = 'block';
                     return;
                 }
-
                 prompt.style.display = 'none';
                 form.style.display = 'block';
-                display.textContent = formatDisplayDate(selectedDate);
-
-                const exercises = getExercisesForDate(selectedDate);
-                // Sort by time
-                exercises.sort((a, b) => a.time.localeCompare(b.time));
-
+                display.textContent = new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long',
+                    year: 'numeric', month: 'long', day: 'numeric' });
+                const exercises = getExercisesForDate(selectedDate).sort((a, b) => a.time.localeCompare(b.time));
                 if (exercises.length === 0) {
                     list.innerHTML =
-                        '<li class="no-exercises"><span class="icon">🏝️</span>No exercises yet.<br>Add one using the form above!</li>';
+                        '<li class="no-exercises"><span style="font-size:2rem;display:block;margin-bottom:8px;">🏝️</span>No exercises yet.</li>';
                 } else {
                     list.innerHTML = exercises.map(ex => `
                 <li class="exercise-item">
                   <div class="exercise-info">
                     <span class="exercise-time-badge">${formatTimeDisplay(ex.time)}</span>
                     <span class="exercise-name">${ex.exercise}</span>
-                    <span class="exercise-type-badge ${ex.type === 'time' ? 'badge-time' : 'badge-reps'}">${ex.type === 'time' ? '⏱ Time' : '🔁 Reps'}</span>
+                    <span class="exercise-type-badge ${ex.type==='time'?'badge-time':'badge-reps'}">${ex.type==='time'?'⏱ Time':'🔁 Reps'}</span>
                   </div>
                   <div style="display:flex;align-items:center;gap:10px;">
                     <span class="exercise-value">${formatValue(ex.type, ex.value)}</span>
-                    <button class="btn-delete" onclick="deleteExercise('${selectedDate}', '${ex.id}')" title="Delete">🗑</button>
+                    <button class="btn-delete" onclick="deleteExercise('${selectedDate}','${ex.id}')">🗑</button>
                   </div>
-                </li>
-              `).join('');
+                </li>`).join('');
                 }
             }
 
-            function formatDisplayDate(dateStr) {
-                const parts = dateStr.split('-');
-                const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                return d.toLocaleDateString('en-US', options);
-            }
-
-            function formatTimeDisplay(timeStr) {
-                const [h, m] = timeStr.split(':').map(Number);
+            function formatTimeDisplay(t) {
+                const [h, m] = t.split(':').map(Number);
                 const ampm = h >= 12 ? 'PM' : 'AM';
                 const h12 = h % 12 || 12;
-                return `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+                return `${h12}:${String(m).padStart(2,'0')} ${ampm}`;
             }
 
             window.onExerciseChange = function() {
-                const select = document.getElementById('exerciseSelect');
-                const valueLabel = document.getElementById('valueLabel');
-                const valueInput = document.getElementById('exerciseValue');
-                const exerciseName = select.value;
-                const type = getExerciseType(exerciseName);
-
+                const sel = document.getElementById('exerciseSelect').value;
+                const type = getExerciseType(sel);
+                const lbl = document.getElementById('valueLabel');
+                const inp = document.getElementById('exerciseValue');
                 if (type === 'time') {
-                    valueLabel.textContent = '⏱ Duration (seconds)';
-                    valueInput.placeholder = 'e.g. 60';
-                    if (valueInput.value === '30' || valueInput.value === '') valueInput.value = '60';
+                    lbl.textContent = '⏱ Duration (seconds)';
+                    inp.placeholder = 'e.g. 60';
+                    if (inp.value === '30' || inp.value === '') inp.value = '60';
                 } else {
-                    valueLabel.textContent = '🔢 Reps';
-                    valueInput.placeholder = 'e.g. 30';
-                    if (valueInput.value === '60' || valueInput.value === '') valueInput.value = '30';
+                    lbl.textContent = '🔢 Reps';
+                    inp.placeholder = 'e.g. 30';
+                    if (inp.value === '60' || inp.value === '') inp.value = '30';
                 }
             };
 
             window.addExercise = function() {
-                if (!selectedDate) {
-                    showToast('⚠️ Please select a day on the calendar first');
-                    return;
-                }
+                if (!selectedDate) { showToast('Select a day first'); return; }
                 const time = document.getElementById('exerciseTime').value;
                 const exercise = document.getElementById('exerciseSelect').value;
                 const value = parseInt(document.getElementById('exerciseValue').value);
                 const type = getExerciseType(exercise);
-
-                if (!time) {
-                    showToast('⚠️ Please select a time');
-                    return;
-                }
-                if (!value || value < 1) {
-                    showToast('⚠️ Please enter a valid number');
-                    return;
-                }
-
-                const newExercise = {
-                    id: generateId(),
-                    time: time,
-                    exercise: exercise,
-                    type: type,
-                    value: value
-                };
-
-                const exercises = getExercisesForDate(selectedDate);
-                exercises.push(newExercise);
-                exercises.sort((a, b) => a.time.localeCompare(b.time));
-                setExercisesForDate(selectedDate, exercises);
-
-                // Reset form slightly
-                document.getElementById('exerciseValue').value = type === 'time' ? '60' : '30';
-
+                if (!time) { showToast('Pick a time'); return; }
+                if (!value || value < 1) { showToast('Enter valid number'); return; }
+                const newEx = { id: generateId(), time, exercise, type, value };
+                const arr = getExercisesForDate(selectedDate);
+                arr.push(newEx);
+                arr.sort((a, b) => a.time.localeCompare(b.time));
+                setExercisesForDate(selectedDate, arr);
                 renderCalendar();
                 updateExercisePanel();
-                showToast(`✅ Added: ${exercise} at ${formatTimeDisplay(time)}`);
+                showToast(`✅ Added ${exercise}`);
             };
 
-            window.deleteExercise = function(dateStr, exerciseId) {
-                const exercises = getExercisesForDate(dateStr);
-                const filtered = exercises.filter(ex => ex.id !== exerciseId);
+            window.deleteExercise = function(dateStr, id) {
+                const filtered = getExercisesForDate(dateStr).filter(e => e.id !== id);
                 setExercisesForDate(dateStr, filtered);
                 renderCalendar();
                 updateExercisePanel();
-                showToast('🗑 Exercise removed');
+                showToast('🗑 Removed');
             };
 
             // ───────────────────────────────────────
-            // GITHUB-STYLE CONTRIBUTION GRAPH
+            // HEATMAP GRAPH
             // ───────────────────────────────────────
             function renderGraph() {
                 const today = new Date();
-                const yearStart = new Date(today.getFullYear(), 0, 1);
-                const yearEnd = new Date(today.getFullYear(), 11, 31);
-
-                // We'll show the full current year
-                const graphYear = today.getFullYear();
-
-                // Find the Sunday on or before Jan 1
-                const firstDay = new Date(graphYear, 0, 1);
+                const year = today.getFullYear();
+                const firstDay = new Date(year, 0, 1);
                 const startDay = new Date(firstDay);
-                startDay.setDate(startDay.getDate() - startDay.getDay()); // Go back to Sunday
-
-                // Find the Saturday on or after Dec 31
-                const lastDay = new Date(graphYear, 11, 31);
+                startDay.setDate(startDay.getDate() - startDay.getDay());
+                const lastDay = new Date(year, 11, 31);
                 const endDay = new Date(lastDay);
-                endDay.setDate(endDay.getDate() + (6 - endDay.getDay())); // Go forward to Saturday
+                endDay.setDate(endDay.getDate() + (6 - endDay.getDay()));
 
-                // Build weeks
                 const weeks = [];
                 let current = new Date(startDay);
                 while (current <= endDay) {
                     const week = [];
                     for (let d = 0; d < 7; d++) {
-                        const dateStr = formatDateStr(current.getFullYear(), current.getMonth(), current.getDate());
-                        const count = countExercisesForDate(dateStr);
-                        const isFuture = current > today;
-                        week.push({
-                            dateStr,
-                            count,
-                            isFuture,
-                            date: new Date(current)
-                        });
+                        const ds = formatDateStr(current.getFullYear(), current.getMonth(), current.getDate());
+                        const count = countExercisesForDate(ds);
+                        week.push({ dateStr: ds, count, isFuture: current > today, date: new Date(current) });
                         current.setDate(current.getDate() + 1);
                     }
                     weeks.push(week);
                 }
 
-                // Render month labels
-                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-                ];
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                 const monthsDiv = document.getElementById('graphMonths');
-                // Calculate month positions
-                let monthLabels = [];
+                let monthPositions = [];
                 weeks.forEach((week, wi) => {
-                    const firstDateInWeek = week[0].date;
-                    const monthIndex = firstDateInWeek.getMonth();
-                    const dayOfMonth = firstDateInWeek.getDate();
-                    // Place label if this is the first week where this month appears
-                    // and it's within the first few days of the month
-                    if (dayOfMonth <= 7 || wi === 0) {
-                        const existing = monthLabels.find(m => m.month === monthIndex);
-                        if (!existing || (existing && wi < existing.weekIndex + 3)) {
-                            // Update or add
-                            const idx = monthLabels.findIndex(m => m.month === monthIndex);
-                            if (idx >= 0 && dayOfMonth <= 7) {
-                                monthLabels[idx] = { month: monthIndex, weekIndex: wi, label: monthNames[
-                                        monthIndex] };
-                            } else if (idx < 0) {
-                                monthLabels.push({ month: monthIndex, weekIndex: wi, label: monthNames[monthIndex] });
-                            }
+                    const firstDate = week[0].date;
+                    const mIdx = firstDate.getMonth();
+                    const day = firstDate.getDate();
+                    if (day <= 7 || wi === 0) {
+                        const existing = monthPositions.find(mp => mp.month === mIdx);
+                        if (!existing || (existing && wi < existing.weekIdx + 3)) {
+                            const idx = monthPositions.findIndex(mp => mp.month === mIdx);
+                            if (idx >= 0 && day <= 7) monthPositions[idx] = { month: mIdx, weekIdx: wi,
+                                label: monthNames[mIdx] };
+                            else if (idx < 0) monthPositions.push({ month: mIdx, weekIdx: wi, label: monthNames[
+                                    mIdx] });
                         }
                     }
                 });
-                // Sort by week index
-                monthLabels.sort((a, b) => a.weekIndex - b.weekIndex);
-
-                // Build month labels HTML with proper spacing
-                let monthHTML = '<div style="display:flex;width:100%;position:relative;padding-left:28px;">';
-                const totalWeeks = weeks.length;
-                monthLabels.forEach((ml, i) => {
-                    const leftPct = (ml.weekIndex / totalWeeks) * 100;
+                monthPositions.sort((a, b) => a.weekIdx - b.weekIdx);
+                let monthHTML = '<div style="position:relative;height:18px;margin-left:28px;">';
+                monthPositions.forEach(mp => {
+                    const leftPct = (mp.weekIdx / weeks.length) * 100;
                     monthHTML +=
-                        `<span style="position:absolute;left:calc(28px + ${leftPct}%);font-size:0.65rem;color:var(--text-muted);letter-spacing:0.02em;">${ml.label}</span>`;
+                        `<span style="position:absolute;left:${leftPct}%;font-size:0.7rem;color:var(--text-muted);">${mp.label}</span>`;
                 });
                 monthHTML += '</div>';
                 monthsDiv.innerHTML = monthHTML;
 
-                // Render day labels
-                const dayLabelNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                 const labelsDiv = document.getElementById('graphLabels');
-                // GitHub style: show Mon, Wed, Fri
-                labelsDiv.innerHTML = dayLabelNames.map((name, i) => {
-                    const show = (i === 0 || i === 2 || i === 4 || i === 6); // Show Sun, Tue, Thu, Sat
-                    // Actually GitHub shows Mon, Wed, Fri. Let me show Mon(1), Wed(3), Fri(5)
-                    const showLabel = (i === 1 || i === 3 || i === 5);
-                    return `<span class="graph-label" style="visibility:${showLabel ? 'visible' : 'hidden'}">${showLabel ? name : ''}</span>`;
+                labelsDiv.innerHTML = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((name, i) => {
+                    const show = (i === 1 || i === 3 || i === 5);
+                    return `<span class="graph-label" style="visibility:${show?'visible':'hidden'}">${show?name:''}</span>`;
                 }).join('');
 
-                // Render weeks
                 const weeksDiv = document.getElementById('graphWeeks');
-                weeksDiv.innerHTML = weeks.map(week => {
-                    return `<div class="graph-week">${week.map(day => {
+                weeksDiv.innerHTML = weeks.map(week => `<div class="graph-week">${week.map(day => {
                 let level = 0;
                 if (!day.isFuture && day.count > 0) {
                     if (day.count === 1) level = 1;
@@ -1299,117 +1319,75 @@
                     else if (day.count <= 6) level = 3;
                     else level = 4;
                 }
-                const futureClass = day.isFuture ? ' future' : '';
-                const dateObj = day.date;
-                const displayDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                const label = day.isFuture ? `${displayDate} (future)` : `${displayDate}: ${day.count} exercise${day.count !== 1 ? 's' : ''}`;
-                return `<div class="graph-cell level-${level}${futureClass}" 
-                    data-date="${day.dateStr}" 
-                    data-count="${day.count}"
-                    data-label="${label}"
-                    onmouseenter="showGraphTooltip(event, '${label.replace(/'/g, "\\'")}')"
-                    onmouseleave="hideGraphTooltip()"
-                    onclick="jumpToDate('${day.dateStr}')"
-                    title="${label}"></div>`;
-            }).join('')}</div>`;
-                }).join('');
+                const future = day.isFuture ? ' future' : '';
+                const display = day.date.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+                const label = day.isFuture ? `${display} (future)` : `${display}: ${day.count} workout${day.count!==1?'s':''}`;
+                return `<div class="graph-cell level-${level}${future}" data-date="${day.dateStr}" data-label="${label.replace(/'/g,"\\'")}" onmouseenter="showGraphTooltip(event, '${label.replace(/'/g,"\\'")}')" onmouseleave="hideGraphTooltip()" onclick="jumpToDate('${day.dateStr}')"></div>`;
+            }).join('')}</div>`).join('');
 
-                // Stats
                 updateGraphStats();
             }
 
             function updateGraphStats() {
                 const today = new Date();
-                const yearStart = new Date(today.getFullYear(), 0, 1);
-                let totalWorkouts = 0;
-                let currentStreak = 0;
-                let bestDate = null;
-                let bestCount = 0;
-
-                // Count total workouts
-                const checkDate = new Date(yearStart);
-                while (checkDate <= today) {
-                    const dateStr = formatDateStr(checkDate.getFullYear(), checkDate.getMonth(), checkDate.getDate());
-                    const count = countExercisesForDate(dateStr);
-                    totalWorkouts += count;
-                    if (count > bestCount) {
-                        bestCount = count;
-                        bestDate = dateStr;
-                    }
-                    checkDate.setDate(checkDate.getDate() + 1);
+                let total = 0, streak = 0, bestDate = null, bestCount = 0;
+                const check = new Date(today.getFullYear(), 0, 1);
+                while (check <= today) {
+                    const ds = formatDateStr(check.getFullYear(), check.getMonth(), check.getDate());
+                    const cnt = countExercisesForDate(ds);
+                    total += cnt;
+                    if (cnt > bestCount) { bestCount = cnt;
+                        bestDate = ds; }
+                    check.setDate(check.getDate() + 1);
                 }
-
-                // Calculate streak (consecutive days going backwards from today)
                 const streakCheck = new Date(today);
                 while (true) {
-                    const dateStr = formatDateStr(streakCheck.getFullYear(), streakCheck.getMonth(), streakCheck.getDate());
-                    const count = countExercisesForDate(dateStr);
-                    if (count > 0) {
-                        currentStreak++;
-                        streakCheck.setDate(streakCheck.getDate() - 1);
-                    } else {
-                        break;
-                    }
+                    const ds = formatDateStr(streakCheck.getFullYear(), streakCheck.getMonth(), streakCheck.getDate());
+                    if (countExercisesForDate(ds) > 0) { streak++;
+                        streakCheck.setDate(streakCheck.getDate() - 1); } else break;
                 }
-
-                document.getElementById('statTotal').textContent = totalWorkouts;
-                document.getElementById('statStreak').textContent = currentStreak;
-                document.getElementById('statBest').textContent = bestDate ? `${formatDisplayDateShort(bestDate)} (${bestCount} exercises)` : '—';
+                document.getElementById('statTotal').textContent = total;
+                document.getElementById('statStreak').textContent = streak;
+                document.getElementById('statBest').textContent = bestDate ? `${new Date(bestDate+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})} (${bestCount})` : '—';
             }
 
-            function formatDisplayDateShort(dateStr) {
-                const parts = dateStr.split('-');
-                const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-                return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-            }
-
-            window.showGraphTooltip = function(event, label) {
-                const tooltip = document.getElementById('graphTooltip');
-                tooltip.textContent = label;
-                tooltip.style.left = (event.clientX + 14) + 'px';
-                tooltip.style.top = (event.clientY - 30) + 'px';
-                tooltip.classList.add('visible');
+            window.showGraphTooltip = function(e, label) {
+                const tip = document.getElementById('graphTooltip');
+                tip.textContent = label;
+                tip.style.left = (e.clientX + 16) + 'px';
+                tip.style.top = (e.clientY - 36) + 'px';
+                tip.classList.add('visible');
             };
-
             window.hideGraphTooltip = function() {
-                const tooltip = document.getElementById('graphTooltip');
-                tooltip.classList.remove('visible');
+                document.getElementById('graphTooltip').classList.remove('visible');
             };
-
-            window.jumpToDate = function(dateStr) {
-                selectedDate = dateStr;
-                const parts = dateStr.split('-');
+            window.jumpToDate = function(ds) {
+                selectedDate = ds;
+                const parts = ds.split('-');
                 calendarYear = parseInt(parts[0]);
                 calendarMonth = parseInt(parts[1]) - 1;
                 switchPage('planner');
                 renderCalendar();
                 updateExercisePanel();
-                // Scroll to exercise panel
-                setTimeout(() => {
-                    document.getElementById('exercisePanel').scrollIntoView({ behavior: 'smooth',
-                        block: 'start' });
-                }, 100);
+                setTimeout(() => document.getElementById('exercisePanel').scrollIntoView({ behavior:'smooth', block:'start' }), 100);
             };
 
             // ───────────────────────────────────────
-            // INITIALIZATION
+            // INIT
             // ───────────────────────────────────────
             function init() {
                 loadData();
-                const today = new Date();
-                calendarMonth = today.getMonth();
-                calendarYear = today.getFullYear();
-                selectedDate = formatDateStr(today.getFullYear(), today.getMonth(), today.getDate());
+                const now = new Date();
+                calendarMonth = now.getMonth();
+                calendarYear = now.getFullYear();
+                selectedDate = formatDateStr(now.getFullYear(), now.getMonth(), now.getDate());
                 renderCalendar();
                 updateExercisePanel();
-                // Set default time
-                const now = new Date();
-                const hours = String(now.getHours()).padStart(2, '0');
-                const mins = String(Math.floor(now.getMinutes() / 5) * 5).padStart(2, '0');
-                document.getElementById('exerciseTime').value = `${hours}:${mins}`;
+                const h = String(now.getHours()).padStart(2, '0');
+                const m = String(Math.floor(now.getMinutes()/5)*5).padStart(2, '0');
+                document.getElementById('exerciseTime').value = `${h}:${m}`;
                 onExerciseChange();
             }
-
             init();
         })();
     </script>
