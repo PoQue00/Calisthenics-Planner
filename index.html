@@ -109,6 +109,24 @@
         .btn-delete { background: transparent; color: var(--accent-red); border: 1px solid transparent; padding: 6px 12px; font-size: 0.8rem; border-radius: 50px; cursor: pointer; font-weight: 600; }
         .btn-delete:hover { background: rgba(248,81,73,0.12); border-color: rgba(248,81,73,0.4); }
 
+        .search-input {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(33,38,45,0.7);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: inherit;
+            margin-bottom: 12px;
+            transition: var(--transition);
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(88,166,255,0.15);
+        }
+
         .exercise-list { list-style: none; max-height: 400px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
         .exercise-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; border-radius: var(--radius-sm); margin-bottom: 6px; background: rgba(33,38,45,0.6); backdrop-filter: blur(4px); border: 1px solid transparent; transition: var(--transition); }
         .exercise-item:hover { border-color: var(--border); background: rgba(33,38,45,0.9); }
@@ -211,6 +229,10 @@
                             <input type="time" class="form-input" id="exerciseTime" value="09:00">
                         </div>
                         <div class="form-group">
+                            <label class="form-label">🔍 Search Exercise</label>
+                            <input type="text" class="search-input" id="exerciseSearch" placeholder="Type to filter..." oninput="filterExerciseSelect()">
+                        </div>
+                        <div class="form-group">
                             <label class="form-label">🏋️ Exercise</label>
                             <select class="form-select" id="exerciseSelect" onchange="onExerciseChange()">
                                 <!-- Dynamically populated -->
@@ -263,6 +285,7 @@
         <div class="page" id="page-library">
             <div class="card">
                 <div class="card-header"><span class="dot"></span> Exercise Directory</div>
+                <input type="text" class="search-input" id="librarySearch" placeholder="🔍 Search exercises..." oninput="filterLibrary()">
                 <div class="library-grid" id="libraryGrid"></div>
             </div>
         </div>
@@ -297,7 +320,6 @@
                 { name: 'Hindu Push-ups', type: 'reps', muscles: 'Shoulders, Chest, Spine Mobility', desc: 'Dive bomber style, flowing movement.', difficulty: 4 },
                 { name: 'Dive Bomber Push-ups', type: 'reps', muscles: 'Shoulders, Chest, Triceps', desc: 'From pike to upward dog position.', difficulty: 6 },
                 { name: 'Fingertip Push-ups', type: 'reps', muscles: 'Chest, Triceps, Forearms', desc: 'On fingertips; grip and finger strength.', difficulty: 7 },
-
                 // Pull-ups & variations
                 { name: 'Pull-ups', type: 'reps', muscles: 'Lats, Biceps, Upper Back', desc: 'Overhand grip vertical pull.', difficulty: 6 },
                 { name: 'Chin-ups', type: 'reps', muscles: 'Biceps, Lats', desc: 'Underhand grip, bicep focused.', difficulty: 5 },
@@ -311,14 +333,12 @@
                 { name: 'L-sit Pull-ups', type: 'reps', muscles: 'Lats, Core, Hip Flexors', desc: 'Pull-up with legs held straight out.', difficulty: 8 },
                 { name: 'Behind-the-Neck Pull-ups', type: 'reps', muscles: 'Lats, Rear Delts', desc: 'Bar behind neck; requires mobility.', difficulty: 7 },
                 { name: 'Typewriter Pull-ups', type: 'reps', muscles: 'Lats, Biceps, Core', desc: 'Slide side to side at top position.', difficulty: 8 },
-
                 // Dips
                 { name: 'Dips', type: 'reps', muscles: 'Triceps, Chest, Shoulders', desc: 'Parallel bar dip.', difficulty: 5 },
                 { name: 'Bench Dips', type: 'reps', muscles: 'Triceps', desc: 'Hands on bench, feet on floor.', difficulty: 3 },
                 { name: 'Ring Dips', type: 'reps', muscles: 'Triceps, Chest, Stabilizers', desc: 'Dips on gymnastic rings; instability.', difficulty: 7 },
                 { name: 'Korean Dips', type: 'reps', muscles: 'Triceps, Chest, Shoulders', desc: 'Lean forward, arms behind body.', difficulty: 8 },
                 { name: 'Straight Bar Dips', type: 'reps', muscles: 'Triceps, Chest', desc: 'Dips on a single bar, more challenging.', difficulty: 6 },
-
                 // Squats & Lunges
                 { name: 'Squats', type: 'reps', muscles: 'Quads, Glutes, Core', desc: 'Bodyweight squat.', difficulty: 2 },
                 { name: 'Pistol Squats', type: 'reps', muscles: 'Quads, Glutes, Balance', desc: 'Single-leg squat.', difficulty: 8 },
@@ -334,7 +354,6 @@
                 { name: 'Jumping Lunges', type: 'reps', muscles: 'Quads, Glutes, Power', desc: 'Switch legs mid-air.', difficulty: 7 },
                 { name: 'Bulgarian Split Squats', type: 'reps', muscles: 'Quads, Glutes', desc: 'Rear foot elevated, deep lunge.', difficulty: 6 },
                 { name: 'Curtsy Lunges', type: 'reps', muscles: 'Glute Medius, Quads', desc: 'Diagonal lunge behind.', difficulty: 4 },
-
                 // Core
                 { name: 'Crunches', type: 'reps', muscles: 'Abdominals', desc: 'Basic abdominal crunch.', difficulty: 2 },
                 { name: 'Bicycle Crunches', type: 'reps', muscles: 'Obliques, Abs', desc: 'Twisting knee to elbow.', difficulty: 3 },
@@ -350,7 +369,6 @@
                 { name: 'Windshield Wipers', type: 'reps', muscles: 'Obliques, Core', desc: 'Lying, rotate legs side to side.', difficulty: 6 },
                 { name: 'Dragon Flags', type: 'reps', muscles: 'Full Core, Lats', desc: 'Advanced lying flag; full body tension.', difficulty: 9 },
                 { name: 'Crusifix Crunches', type: 'reps', muscles: 'Obliques, Abs', desc: 'Arms out wide, cross-body crunch.', difficulty: 4 },
-
                 // Planks & Holds (time-based)
                 { name: 'Plank', type: 'time', muscles: 'Core, Shoulders, Stability', desc: 'Hold push-up position.', difficulty: 3 },
                 { name: 'Side Plank (Left)', type: 'time', muscles: 'Obliques, Shoulder', desc: 'Lateral plank left arm.', difficulty: 4 },
@@ -371,7 +389,6 @@
                 { name: 'Planche Lean', type: 'time', muscles: 'Shoulders, Core, Wrists', desc: 'Lean forward with straight arms; planche prep.', difficulty: 7 },
                 { name: 'Back Lever', type: 'time', muscles: 'Lats, Core, Shoulders', desc: 'Hold body horizontal behind bar.', difficulty: 8 },
                 { name: 'Front Lever', type: 'time', muscles: 'Lats, Core, Full Body', desc: 'Hold body horizontal in front.', difficulty: 9 },
-
                 // Other bodyweight exercises
                 { name: 'Burpees', type: 'reps', muscles: 'Full Body, Cardio', desc: 'Squat, plank, push-up, jump.', difficulty: 7 },
                 { name: 'Mountain Climbers', type: 'reps', muscles: 'Core, Shoulders, Hip Flexors', desc: 'Plank with knee drives.', difficulty: 4 },
@@ -391,7 +408,6 @@
                 { name: 'Shadow Boxing', type: 'time', muscles: 'Full Body, Cardio', desc: 'Punching combinations in the air.', difficulty: 3 }
             ];
 
-            // Build time-based set dynamically
             const timeBasedExercises = new Set(
                 exerciseLibrary.filter(ex => ex.type === 'time').map(ex => ex.name)
             );
@@ -453,7 +469,35 @@
                 if (page === 'planner') { renderCalendar(); updateExercisePanel(); }
             };
 
-            // Populate the exercise select dropdown from library
+            // ---------- SEARCH FUNCTIONALITY ----------
+            window.filterExerciseSelect = function() {
+                const query = document.getElementById('exerciseSearch').value.toLowerCase().trim();
+                const select = document.getElementById('exerciseSelect');
+                const repsGroup = exerciseLibrary.filter(ex => ex.type === 'reps' && ex.name.toLowerCase().includes(query));
+                const timeGroup = exerciseLibrary.filter(ex => ex.type === 'time' && ex.name.toLowerCase().includes(query));
+                select.innerHTML = `
+                    <optgroup label="── Rep-Based ──">
+                        ${repsGroup.map(ex => `<option value="${ex.name}">${ex.name}</option>`).join('')}
+                    </optgroup>
+                    <optgroup label="── Time-Based ──">
+                        ${timeGroup.map(ex => `<option value="${ex.name}">${ex.name}</option>`).join('')}
+                    </optgroup>
+                `;
+                // If the currently selected option is not in the new list, reset to first available
+                if (select.options.length > 0) {
+                    select.selectedIndex = 0;
+                    onExerciseChange();
+                }
+            };
+
+            window.filterLibrary = function() {
+                const query = document.getElementById('librarySearch').value.toLowerCase().trim();
+                const filtered = query === '' ? exerciseLibrary : exerciseLibrary.filter(ex =>
+                    ex.name.toLowerCase().includes(query) || ex.muscles.toLowerCase().includes(query)
+                );
+                renderLibraryWithData(filtered);
+            };
+
             function populateExerciseSelect() {
                 const select = document.getElementById('exerciseSelect');
                 const repsGroup = exerciseLibrary.filter(ex => ex.type === 'reps');
@@ -481,10 +525,10 @@
                 return totals;
             }
 
-            function renderLibrary() {
+            function renderLibraryWithData(libraryArray) {
                 const totals = computeTotals();
                 const grid = document.getElementById('libraryGrid');
-                grid.innerHTML = exerciseLibrary.map(ex => {
+                grid.innerHTML = libraryArray.map(ex => {
                     const diffPercent = (ex.difficulty / 10) * 100;
                     const typeBadge = ex.type === 'time' ? '<span class="exercise-type-badge badge-time">⏱ Time</span>' : '<span class="exercise-type-badge badge-reps">🔁 Reps</span>';
                     const exTotal = totals[ex.name];
@@ -503,6 +547,10 @@
                         </div>
                     </div>`;
                 }).join('');
+            }
+
+            function renderLibrary() {
+                renderLibraryWithData(exerciseLibrary);
             }
 
             function formatDateStr(y, m, d) { return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
@@ -773,7 +821,7 @@
 
             function init() {
                 loadData();
-                populateExerciseSelect(); // dynamic dropdown
+                populateExerciseSelect();
                 const now = new Date();
                 calendarMonth = now.getMonth();
                 calendarYear = now.getFullYear();
