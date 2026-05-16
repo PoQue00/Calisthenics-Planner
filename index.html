@@ -50,6 +50,7 @@
         .header {
             background: rgba(22, 27, 34, 0.85);
             backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
             border-bottom: 1px solid rgba(48, 54, 61, 0.8);
             padding: 0 24px;
             position: sticky;
@@ -240,6 +241,7 @@
             border: 2px solid transparent;
             background: rgba(22,27,34,0.5);
             transition: all 0.2s;
+            position: relative;   /* 👈 THIS FIXES THE DOT PLACEMENT */
         }
         .cal-day:hover {
             background: var(--bg-tertiary);
@@ -748,7 +750,6 @@
                     const d = daysInPrev - i;
                     const m = calendarMonth === 0 ? 11 : calendarMonth-1;
                     const y = calendarMonth === 0 ? calendarYear-1 : calendarYear;
-                    const ds = formatDateStr(y, m, d);
                     html += `<div class="cal-day other-month">${d}</div>`;
                 }
                 for (let d=1; d<=daysInMonth; d++) {
@@ -766,7 +767,6 @@
                 for (let d=1; d<=rem; d++) {
                     const m = calendarMonth === 11 ? 0 : calendarMonth+1;
                     const y = calendarMonth === 11 ? calendarYear+1 : calendarYear;
-                    const ds = formatDateStr(y, m, d);
                     html += `<div class="cal-day other-month">${d}</div>`;
                 }
                 grid.innerHTML = html;
@@ -871,9 +871,6 @@
                 showToast('🗑 Removed');
             };
 
-            // ───────────────────────────────────────
-            // FIXED HEATMAP RENDERING
-            // ───────────────────────────────────────
             function renderGraph() {
                 const today = new Date();
                 const year = today.getFullYear();
@@ -901,7 +898,6 @@
                 const cellSize = 14, gap = 3;
                 const totalWeeksWidth = nWeeks * cellSize + (nWeeks - 1) * gap;
 
-                // Month labels
                 const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
                 let monthPositions = [];
                 weeks.forEach((week, wi) => {
@@ -927,14 +923,12 @@
                     }).join('')}
                 </div>`;
 
-                // Day labels
                 const labelsDiv = document.getElementById('graphLabels');
                 labelsDiv.innerHTML = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((name, i) => {
                     const show = (i === 1 || i === 3 || i === 5);
                     return `<span class="graph-label" style="visibility:${show?'visible':'hidden'}">${show?name:''}</span>`;
                 }).join('');
 
-                // Weeks
                 const weeksDiv = document.getElementById('graphWeeks');
                 weeksDiv.innerHTML = weeks.map(week => `<div class="graph-week">${week.map(day => {
                     let level = 0;
