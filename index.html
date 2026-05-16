@@ -213,43 +213,7 @@
                         <div class="form-group">
                             <label class="form-label">🏋️ Exercise</label>
                             <select class="form-select" id="exerciseSelect" onchange="onExerciseChange()">
-                                <optgroup label="── Rep-Based ──">
-                                    <option value="Push-ups">Push-ups</option>
-                                    <option value="Diamond Push-ups">Diamond Push-ups</option>
-                                    <option value="Wide Push-ups">Wide Push-ups</option>
-                                    <option value="Pike Push-ups">Pike Push-ups</option>
-                                    <option value="Archer Push-ups">Archer Push-ups</option>
-                                    <option value="Pull-ups">Pull-ups</option>
-                                    <option value="Chin-ups">Chin-ups</option>
-                                    <option value="Commando Pull-ups">Commando Pull-ups</option>
-                                    <option value="Dips">Dips</option>
-                                    <option value="Squats">Squats</option>
-                                    <option value="Pistol Squats">Pistol Squats</option>
-                                    <option value="Lunges">Lunges</option>
-                                    <option value="Burpees">Burpees</option>
-                                    <option value="Mountain Climbers">Mountain Climbers</option>
-                                    <option value="Crunches">Crunches</option>
-                                    <option value="Leg Raises">Leg Raises</option>
-                                    <option value="Russian Twists">Russian Twists</option>
-                                    <option value="Calf Raises">Calf Raises</option>
-                                    <option value="Box Jumps">Box Jumps</option>
-                                    <option value="Inchworms">Inchworms</option>
-                                </optgroup>
-                                <optgroup label="── Time-Based ──">
-                                    <option value="Plank">Plank</option>
-                                    <option value="Side Plank (Left)">Side Plank (Left)</option>
-                                    <option value="Side Plank (Right)">Side Plank (Right)</option>
-                                    <option value="Wall Sit">Wall Sit</option>
-                                    <option value="Dead Hang">Dead Hang</option>
-                                    <option value="Hollow Body Hold">Hollow Body Hold</option>
-                                    <option value="Superman Hold">Superman Hold</option>
-                                    <option value="L-Sit">L-Sit</option>
-                                    <option value="V-Sit">V-Sit</option>
-                                    <option value="Bridge Hold">Bridge Hold</option>
-                                    <option value="Crow Pose">Crow Pose</option>
-                                    <option value="Handstand Hold">Handstand Hold</option>
-                                    <option value="Flexed Arm Hang">Flexed Arm Hang</option>
-                                </optgroup>
+                                <!-- Dynamically populated -->
                             </select>
                         </div>
                         <div class="form-group">
@@ -316,47 +280,121 @@
             let calendarYear = new Date().getFullYear();
             let currentPage = 'planner';
 
-            const timeBasedExercises = new Set([
-                'Plank', 'Side Plank (Left)', 'Side Plank (Right)', 'Wall Sit', 'Dead Hang',
-                'Hollow Body Hold', 'Superman Hold', 'L-Sit', 'V-Sit', 'Bridge Hold',
-                'Crow Pose', 'Frog Stand', 'Handstand Hold', 'Flexed Arm Hang', 'Arch Hold', 'Chin-up Hold'
-            ]);
-
+            // ---------- HUGE EXERCISE LIBRARY ----------
             const exerciseLibrary = [
+                // Push-ups & variations
                 { name: 'Push-ups', type: 'reps', muscles: 'Chest, Triceps, Shoulders', desc: 'Classic bodyweight push-up.', difficulty: 3 },
                 { name: 'Diamond Push-ups', type: 'reps', muscles: 'Triceps, Chest', desc: 'Hands close together, diamond shape.', difficulty: 5 },
                 { name: 'Wide Push-ups', type: 'reps', muscles: 'Chest, Front Delts', desc: 'Hands wider than shoulders.', difficulty: 4 },
-                { name: 'Pike Push-ups', type: 'reps', muscles: 'Shoulders, Triceps', desc: 'Hips high, pike position.', difficulty: 6 },
-                { name: 'Archer Push-ups', type: 'reps', muscles: 'Chest, Triceps, Core', desc: 'One arm extended, other bent.', difficulty: 7 },
+                { name: 'Pike Push-ups', type: 'reps', muscles: 'Shoulders, Triceps', desc: 'Hips high, pike position; builds overhead strength.', difficulty: 6 },
+                { name: 'Archer Push-ups', type: 'reps', muscles: 'Chest, Triceps, Core', desc: 'One arm extended, other bent; unilateral focus.', difficulty: 7 },
+                { name: 'One-Arm Push-up', type: 'reps', muscles: 'Chest, Triceps, Core', desc: 'Full push-up on a single arm; extreme strength.', difficulty: 9 },
+                { name: 'Pseudo Planche Push-ups', type: 'reps', muscles: 'Shoulders, Chest, Triceps', desc: 'Hands near hips, lean forward; planche progression.', difficulty: 8 },
+                { name: 'Decline Push-ups', type: 'reps', muscles: 'Upper Chest, Shoulders', desc: 'Feet elevated, targets upper chest.', difficulty: 5 },
+                { name: 'Incline Push-ups', type: 'reps', muscles: 'Lower Chest', desc: 'Hands elevated, easier variation.', difficulty: 2 },
+                { name: 'Spiderman Push-ups', type: 'reps', muscles: 'Chest, Triceps, Hip Flexors', desc: 'Bring knee to elbow while lowering.', difficulty: 5 },
+                { name: 'Clap Push-ups', type: 'reps', muscles: 'Chest, Triceps, Explosiveness', desc: 'Push explosively, clap in air.', difficulty: 7 },
+                { name: 'Hindu Push-ups', type: 'reps', muscles: 'Shoulders, Chest, Spine Mobility', desc: 'Dive bomber style, flowing movement.', difficulty: 4 },
+                { name: 'Dive Bomber Push-ups', type: 'reps', muscles: 'Shoulders, Chest, Triceps', desc: 'From pike to upward dog position.', difficulty: 6 },
+                { name: 'Fingertip Push-ups', type: 'reps', muscles: 'Chest, Triceps, Forearms', desc: 'On fingertips; grip and finger strength.', difficulty: 7 },
+
+                // Pull-ups & variations
                 { name: 'Pull-ups', type: 'reps', muscles: 'Lats, Biceps, Upper Back', desc: 'Overhand grip vertical pull.', difficulty: 6 },
                 { name: 'Chin-ups', type: 'reps', muscles: 'Biceps, Lats', desc: 'Underhand grip, bicep focused.', difficulty: 5 },
                 { name: 'Commando Pull-ups', type: 'reps', muscles: 'Lats, Biceps, Grip', desc: 'Alternating grip, head side to side.', difficulty: 7 },
+                { name: 'Wide Grip Pull-ups', type: 'reps', muscles: 'Lats, Upper Back', desc: 'Wider than shoulder width.', difficulty: 7 },
+                { name: 'Close Grip Pull-ups', type: 'reps', muscles: 'Biceps, Lower Lats', desc: 'Hands close together.', difficulty: 6 },
+                { name: 'Archer Pull-ups', type: 'reps', muscles: 'Lats, Biceps, Core', desc: 'One arm straight, other pulling; unilateral.', difficulty: 8 },
+                { name: 'One-Arm Pull-up', type: 'reps', muscles: 'Lats, Biceps, Grip', desc: 'Single arm pull-up; elite strength.', difficulty: 10 },
+                { name: 'Muscle-up', type: 'reps', muscles: 'Lats, Chest, Triceps', desc: 'Pull-up transition to dip.', difficulty: 9 },
+                { name: 'Explosive Pull-ups', type: 'reps', muscles: 'Lats, Biceps, Power', desc: 'Pull fast, hands leave bar slightly.', difficulty: 7 },
+                { name: 'L-sit Pull-ups', type: 'reps', muscles: 'Lats, Core, Hip Flexors', desc: 'Pull-up with legs held straight out.', difficulty: 8 },
+                { name: 'Behind-the-Neck Pull-ups', type: 'reps', muscles: 'Lats, Rear Delts', desc: 'Bar behind neck; requires mobility.', difficulty: 7 },
+                { name: 'Typewriter Pull-ups', type: 'reps', muscles: 'Lats, Biceps, Core', desc: 'Slide side to side at top position.', difficulty: 8 },
+
+                // Dips
                 { name: 'Dips', type: 'reps', muscles: 'Triceps, Chest, Shoulders', desc: 'Parallel bar dip.', difficulty: 5 },
+                { name: 'Bench Dips', type: 'reps', muscles: 'Triceps', desc: 'Hands on bench, feet on floor.', difficulty: 3 },
+                { name: 'Ring Dips', type: 'reps', muscles: 'Triceps, Chest, Stabilizers', desc: 'Dips on gymnastic rings; instability.', difficulty: 7 },
+                { name: 'Korean Dips', type: 'reps', muscles: 'Triceps, Chest, Shoulders', desc: 'Lean forward, arms behind body.', difficulty: 8 },
+                { name: 'Straight Bar Dips', type: 'reps', muscles: 'Triceps, Chest', desc: 'Dips on a single bar, more challenging.', difficulty: 6 },
+
+                // Squats & Lunges
                 { name: 'Squats', type: 'reps', muscles: 'Quads, Glutes, Core', desc: 'Bodyweight squat.', difficulty: 2 },
                 { name: 'Pistol Squats', type: 'reps', muscles: 'Quads, Glutes, Balance', desc: 'Single-leg squat.', difficulty: 8 },
+                { name: 'Shrimp Squats', type: 'reps', muscles: 'Quads, Glutes', desc: 'One leg behind, knee almost touches ground.', difficulty: 7 },
+                { name: 'Dragon Squats', type: 'reps', muscles: 'Quads, Glutes, Flexibility', desc: 'Advanced single-leg squat with leg behind.', difficulty: 9 },
+                { name: 'Cossack Squats', type: 'reps', muscles: 'Adductors, Quads, Mobility', desc: 'Side-to-side deep squat.', difficulty: 5 },
+                { name: 'Jump Squats', type: 'reps', muscles: 'Quads, Glutes, Explosiveness', desc: 'Explosive squat jump.', difficulty: 5 },
+                { name: 'Sumo Squats', type: 'reps', muscles: 'Inner Thighs, Glutes', desc: 'Wide stance squat.', difficulty: 3 },
+                { name: 'Sissy Squats', type: 'reps', muscles: 'Quads, Knee Stability', desc: 'Lean back, knees forward.', difficulty: 6 },
                 { name: 'Lunges', type: 'reps', muscles: 'Quads, Hamstrings, Glutes', desc: 'Forward/backward lunge.', difficulty: 3 },
-                { name: 'Burpees', type: 'reps', muscles: 'Full Body, Cardio', desc: 'Squat, plank, push-up, jump.', difficulty: 7 },
-                { name: 'Mountain Climbers', type: 'reps', muscles: 'Core, Shoulders, Hip Flexors', desc: 'Plank with knee drives.', difficulty: 4 },
+                { name: 'Reverse Lunges', type: 'reps', muscles: 'Glutes, Hamstrings', desc: 'Step backward instead of forward.', difficulty: 3 },
+                { name: 'Walking Lunges', type: 'reps', muscles: 'Quads, Glutes, Balance', desc: 'Continuous forward lunges.', difficulty: 4 },
+                { name: 'Jumping Lunges', type: 'reps', muscles: 'Quads, Glutes, Power', desc: 'Switch legs mid-air.', difficulty: 7 },
+                { name: 'Bulgarian Split Squats', type: 'reps', muscles: 'Quads, Glutes', desc: 'Rear foot elevated, deep lunge.', difficulty: 6 },
+                { name: 'Curtsy Lunges', type: 'reps', muscles: 'Glute Medius, Quads', desc: 'Diagonal lunge behind.', difficulty: 4 },
+
+                // Core
                 { name: 'Crunches', type: 'reps', muscles: 'Abdominals', desc: 'Basic abdominal crunch.', difficulty: 2 },
+                { name: 'Bicycle Crunches', type: 'reps', muscles: 'Obliques, Abs', desc: 'Twisting knee to elbow.', difficulty: 3 },
+                { name: 'Reverse Crunches', type: 'reps', muscles: 'Lower Abs', desc: 'Bring knees toward chest.', difficulty: 3 },
                 { name: 'Leg Raises', type: 'reps', muscles: 'Lower Abs, Hip Flexors', desc: 'Lying leg raise.', difficulty: 4 },
+                { name: 'Hanging Leg Raises', type: 'reps', muscles: 'Abs, Hip Flexors, Grip', desc: 'Hang from bar, raise legs.', difficulty: 6 },
+                { name: 'Flutter Kicks', type: 'reps', muscles: 'Lower Abs, Hip Flexors', desc: 'Quick scissor kicks while lying.', difficulty: 3 },
                 { name: 'Russian Twists', type: 'reps', muscles: 'Obliques, Core', desc: 'Seated twisting motion.', difficulty: 3 },
-                { name: 'Calf Raises', type: 'reps', muscles: 'Calves', desc: 'Standing heel raise.', difficulty: 1 },
-                { name: 'Box Jumps', type: 'reps', muscles: 'Quads, Glutes, Explosiveness', desc: 'Jump onto box/step.', difficulty: 5 },
-                { name: 'Inchworms', type: 'reps', muscles: 'Full Body Mobility', desc: 'Walk hands out to plank.', difficulty: 2 },
+                { name: 'V-Ups', type: 'reps', muscles: 'Full Abs, Hip Flexors', desc: 'Simultaneously raise legs and torso.', difficulty: 5 },
+                { name: 'Toe Touches', type: 'reps', muscles: 'Upper Abs', desc: 'Lying, reach toward toes.', difficulty: 2 },
+                { name: 'Dead Bug', type: 'reps', muscles: 'Core Stability', desc: 'Opposite arm/leg extension, anti-rotation.', difficulty: 3 },
+                { name: 'Hanging Knee Raises', type: 'reps', muscles: 'Abs, Hip Flexors', desc: 'Hang and bring knees up.', difficulty: 5 },
+                { name: 'Windshield Wipers', type: 'reps', muscles: 'Obliques, Core', desc: 'Lying, rotate legs side to side.', difficulty: 6 },
+                { name: 'Dragon Flags', type: 'reps', muscles: 'Full Core, Lats', desc: 'Advanced lying flag; full body tension.', difficulty: 9 },
+                { name: 'Crusifix Crunches', type: 'reps', muscles: 'Obliques, Abs', desc: 'Arms out wide, cross-body crunch.', difficulty: 4 },
+
+                // Planks & Holds (time-based)
                 { name: 'Plank', type: 'time', muscles: 'Core, Shoulders, Stability', desc: 'Hold push-up position.', difficulty: 3 },
                 { name: 'Side Plank (Left)', type: 'time', muscles: 'Obliques, Shoulder', desc: 'Lateral plank left arm.', difficulty: 4 },
                 { name: 'Side Plank (Right)', type: 'time', muscles: 'Obliques, Shoulder', desc: 'Lateral plank right arm.', difficulty: 4 },
-                { name: 'Wall Sit', type: 'time', muscles: 'Quads, Glutes', desc: 'Sit against wall at 90°.', difficulty: 4 },
-                { name: 'Dead Hang', type: 'time', muscles: 'Grip, Shoulders, Back', desc: 'Hang from bar.', difficulty: 2 },
+                { name: 'Reverse Plank', type: 'time', muscles: 'Glutes, Hamstrings, Back', desc: 'Face up, support on heels and hands.', difficulty: 3 },
+                { name: 'Plank with Shoulder Taps', type: 'time', muscles: 'Core, Shoulders', desc: 'Plank position, tap opposite shoulder; timed for reps.', difficulty: 4 },
                 { name: 'Hollow Body Hold', type: 'time', muscles: 'Core, Lower Back', desc: 'Lie on back, arms/legs raised.', difficulty: 5 },
                 { name: 'Superman Hold', type: 'time', muscles: 'Lower Back, Glutes', desc: 'Prone hold with limbs lifted.', difficulty: 3 },
-                { name: 'L-Sit', type: 'time', muscles: 'Core, Hip Flexors, Triceps', desc: 'Hold legs straight out.', difficulty: 8 },
+                { name: 'L-Sit', type: 'time', muscles: 'Core, Hip Flexors, Triceps', desc: 'Hold legs straight out while supported.', difficulty: 8 },
                 { name: 'V-Sit', type: 'time', muscles: 'Core, Hip Flexors', desc: 'Balance with legs and torso V.', difficulty: 9 },
                 { name: 'Bridge Hold', type: 'time', muscles: 'Glutes, Hamstrings, Back', desc: 'Hip thrust hold.', difficulty: 2 },
+                { name: 'Wall Sit', type: 'time', muscles: 'Quads, Glutes', desc: 'Sit against wall at 90°.', difficulty: 4 },
+                { name: 'Dead Hang', type: 'time', muscles: 'Grip, Shoulders, Back', desc: 'Hang from bar.', difficulty: 2 },
+                { name: 'Flexed Arm Hang', type: 'time', muscles: 'Biceps, Back, Grip', desc: 'Hold chin above bar.', difficulty: 6 },
                 { name: 'Crow Pose', type: 'time', muscles: 'Wrists, Core, Balance', desc: 'Yoga arm balance.', difficulty: 7 },
                 { name: 'Handstand Hold', type: 'time', muscles: 'Shoulders, Core, Balance', desc: 'Freestanding handstand.', difficulty: 9 },
-                { name: 'Flexed Arm Hang', type: 'time', muscles: 'Biceps, Back, Grip', desc: 'Hold chin above bar.', difficulty: 6 }
+                { name: 'Frog Stand', type: 'time', muscles: 'Wrists, Core', desc: 'Knees on elbows, beginner balance.', difficulty: 5 },
+                { name: 'Planche Lean', type: 'time', muscles: 'Shoulders, Core, Wrists', desc: 'Lean forward with straight arms; planche prep.', difficulty: 7 },
+                { name: 'Back Lever', type: 'time', muscles: 'Lats, Core, Shoulders', desc: 'Hold body horizontal behind bar.', difficulty: 8 },
+                { name: 'Front Lever', type: 'time', muscles: 'Lats, Core, Full Body', desc: 'Hold body horizontal in front.', difficulty: 9 },
+
+                // Other bodyweight exercises
+                { name: 'Burpees', type: 'reps', muscles: 'Full Body, Cardio', desc: 'Squat, plank, push-up, jump.', difficulty: 7 },
+                { name: 'Mountain Climbers', type: 'reps', muscles: 'Core, Shoulders, Hip Flexors', desc: 'Plank with knee drives.', difficulty: 4 },
+                { name: 'Jumping Jacks', type: 'reps', muscles: 'Full Body, Cardio', desc: 'Classic star jump.', difficulty: 1 },
+                { name: 'Box Jumps', type: 'reps', muscles: 'Quads, Glutes, Explosiveness', desc: 'Jump onto box/step.', difficulty: 5 },
+                { name: 'Star Jumps', type: 'reps', muscles: 'Full Body, Plyometrics', desc: 'Explosive jump with arms and legs wide.', difficulty: 4 },
+                { name: 'Inchworms', type: 'reps', muscles: 'Full Body Mobility', desc: 'Walk hands out to plank.', difficulty: 2 },
+                { name: 'Bear Crawls', type: 'reps', muscles: 'Shoulders, Core, Quads', desc: 'Crawling on hands and feet.', difficulty: 3 },
+                { name: 'Calf Raises', type: 'reps', muscles: 'Calves', desc: 'Standing heel raise.', difficulty: 1 },
+                { name: 'Glute Bridges', type: 'reps', muscles: 'Glutes, Hamstrings', desc: 'Hip thrust from floor.', difficulty: 2 },
+                { name: 'Nordic Curls (assisted)', type: 'reps', muscles: 'Hamstrings', desc: 'Controlled descent from kneeling.', difficulty: 7 },
+                { name: 'Handstand Push-ups', type: 'reps', muscles: 'Shoulders, Triceps, Traps', desc: 'Push-up in handstand position.', difficulty: 9 },
+                { name: 'Tuck Jumps', type: 'reps', muscles: 'Quads, Calves, Explosiveness', desc: 'Jump and tuck knees to chest.', difficulty: 5 },
+                { name: 'Skater Hops', type: 'reps', muscles: 'Glutes, Quads, Balance', desc: 'Lateral bound, landing on one leg.', difficulty: 4 },
+                { name: 'High Knees', type: 'reps', muscles: 'Hip Flexors, Cardio', desc: 'Running in place with high knees.', difficulty: 2 },
+                { name: 'Butt Kicks', type: 'reps', muscles: 'Hamstrings, Cardio', desc: 'Jogging while kicking heels to glutes.', difficulty: 2 },
+                { name: 'Shadow Boxing', type: 'time', muscles: 'Full Body, Cardio', desc: 'Punching combinations in the air.', difficulty: 3 }
             ];
+
+            // Build time-based set dynamically
+            const timeBasedExercises = new Set(
+                exerciseLibrary.filter(ex => ex.type === 'time').map(ex => ex.name)
+            );
 
             function getExerciseType(name) { return timeBasedExercises.has(name) ? 'time' : 'reps'; }
             function formatValue(type, value, weight) {
@@ -415,7 +453,21 @@
                 if (page === 'planner') { renderCalendar(); updateExercisePanel(); }
             };
 
-            // ---- Calculate totals from workoutData ----
+            // Populate the exercise select dropdown from library
+            function populateExerciseSelect() {
+                const select = document.getElementById('exerciseSelect');
+                const repsGroup = exerciseLibrary.filter(ex => ex.type === 'reps');
+                const timeGroup = exerciseLibrary.filter(ex => ex.type === 'time');
+                select.innerHTML = `
+                    <optgroup label="── Rep-Based ──">
+                        ${repsGroup.map(ex => `<option value="${ex.name}">${ex.name}</option>`).join('')}
+                    </optgroup>
+                    <optgroup label="── Time-Based ──">
+                        ${timeGroup.map(ex => `<option value="${ex.name}">${ex.name}</option>`).join('')}
+                    </optgroup>
+                `;
+            }
+
             function computeTotals() {
                 const totals = {};
                 for (const dateStr in workoutData) {
@@ -721,6 +773,7 @@
 
             function init() {
                 loadData();
+                populateExerciseSelect(); // dynamic dropdown
                 const now = new Date();
                 calendarMonth = now.getMonth();
                 calendarYear = now.getFullYear();
