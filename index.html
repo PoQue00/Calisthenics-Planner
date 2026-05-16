@@ -241,7 +241,7 @@
             border: 2px solid transparent;
             background: rgba(22,27,34,0.5);
             transition: all 0.2s;
-            position: relative;   /* 👈 THIS FIXES THE DOT PLACEMENT */
+            position: relative;   /* fixes dot placement */
         }
         .cal-day:hover {
             background: var(--bg-tertiary);
@@ -344,6 +344,7 @@
         .exercise-time-badge { background: var(--selected-bg); color: var(--accent-blue); font-weight: 700; font-size: 0.75rem; padding: 4px 10px; border-radius: 50px; }
         .exercise-name { font-weight: 600; font-size: 0.9rem; }
         .exercise-value { font-weight: 700; font-size: 0.85rem; color: var(--accent-green); }
+        .exercise-weight { font-weight: 700; font-size: 0.8rem; color: var(--accent-orange); margin-left: 4px; }
         .exercise-type-badge { font-size: 0.65rem; padding: 3px 9px; border-radius: 50px; font-weight: 600; }
         .badge-reps { background: rgba(88,166,255,0.15); color: var(--accent-blue); }
         .badge-time { background: rgba(210,153,29,0.15); color: var(--accent-orange); }
@@ -570,6 +571,11 @@
                             <label class="form-label" id="valueLabel">🔢 Reps</label>
                             <input type="number" class="form-input" id="exerciseValue" placeholder="e.g. 30" min="1" value="30">
                         </div>
+                        <!-- 👇 NEW WEIGHT INPUT -->
+                        <div class="form-group">
+                            <label class="form-label">🏋️ Extra Weight (kg) <span style="font-weight:400;text-transform:none;font-size:0.7rem;">(optional)</span></label>
+                            <input type="number" class="form-input" id="exerciseWeight" placeholder="e.g. 5" min="0" step="0.5" value="">
+                        </div>
                         <button class="btn btn-primary" onclick="addExercise()">➕ Add Exercise</button>
                     </div>
                     <ul class="exercise-list" id="exerciseList" style="margin-top:18px;"></ul>
@@ -669,13 +675,17 @@
             ];
 
             function getExerciseType(name) { return timeBasedExercises.has(name) ? 'time' : 'reps'; }
-            function formatValue(type, value) {
+            function formatValue(type, value, weight) {
+                let base = '';
                 if (type === 'time') {
                     const secs = parseInt(value);
-                    if (secs >= 60) return `${Math.floor(secs/60)}m ${secs%60}s`;
-                    return `${secs}s`;
+                    if (secs >= 60) base = `${Math.floor(secs/60)}m ${secs%60}s`;
+                    else base = `${secs}s`;
+                } else {
+                    base = `${value} reps`;
                 }
-                return `${value} reps`;
+                if (weight && weight > 0) base += ` +${weight}kg`;
+                return base;
             }
 
             function loadData() {
@@ -807,18 +817,22 @@
                 if (exercises.length === 0) {
                     list.innerHTML = '<li class="no-exercises" style="text-align:center;padding:30px;">🏝️ No exercises yet.</li>';
                 } else {
-                    list.innerHTML = exercises.map(ex => `
+                    list.innerHTML = exercises.map(ex => {
+                        const weight = ex.weight || 0;
+                        const weightDisplay = weight > 0 ? ` <span class="exercise-weight">+${weight}kg</span>` : '';
+                        return `
                         <li class="exercise-item">
-                            <div style="display:flex;align-items:center;gap:10px;">
+                            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
                                 <span class="exercise-time-badge">${formatTimeDisplay(ex.time)}</span>
                                 <span class="exercise-name">${ex.exercise}</span>
                                 <span class="exercise-type-badge ${ex.type==='time'?'badge-time':'badge-reps'}">${ex.type==='time'?'⏱ Time':'🔁 Reps'}</span>
                             </div>
-                            <div style="display:flex;align-items:center;gap:10px;">
-                                <span class="exercise-value">${formatValue(ex.type, ex.value)}</span>
+                            <div style="display:flex;align-items:center;gap:6px;">
+                                <span class="exercise-value">${formatValue(ex.type, ex.value)}</span>${weightDisplay}
                                 <button class="btn-delete" onclick="deleteExercise('${selectedDate}','${ex.id}')">🗑</button>
                             </div>
-                        </li>`).join('');
+                        </li>`;
+                    }).join('');
                 }
             }
 
@@ -850,16 +864,21 @@
                 const time = document.getElementById('exerciseTime').value;
                 const exercise = document.getElementById('exerciseSelect').value;
                 const value = parseInt(document.getElementById('exerciseValue').value);
+                const weightInput = document.getElementById('exerciseWeight').value;
+                const weight = weightInput === '' ? 0 : parseFloat(weightInput);
                 const type = getExerciseType(exercise);
+
                 if (!time) { showToast('Pick a time'); return; }
                 if (!value || value < 1) { showToast('Enter valid number'); return; }
-                const newEx = { id: generateId(), time, exercise, type, value };
+
+                const newEx = { id: generateId(), time, exercise, type, value, weight: weight || 0 };
                 const arr = getExercisesForDate(selectedDate);
                 arr.push(newEx);
                 arr.sort((a,b) => a.time.localeCompare(b.time));
                 setExercisesForDate(selectedDate, arr);
                 renderCalendar();
                 updateExercisePanel();
+                document.getElementById('exerciseWeight').value = ''; // reset weight field
                 showToast(`✅ Added ${exercise}`);
             };
 
@@ -1005,4 +1024,4 @@
         })();
     </script>
 </body>
-</html>
+    </html>
