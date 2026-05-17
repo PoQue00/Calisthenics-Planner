@@ -137,6 +137,15 @@
         .exercise-type-badge { font-size: 0.65rem; padding: 3px 9px; border-radius: 50px; font-weight: 600; }
         .badge-reps { background: rgba(88,166,255,0.15); color: var(--accent-blue); }
         .badge-time { background: rgba(210,153,29,0.15); color: var(--accent-orange); }
+        .sets-badge {
+            background: rgba(210,153,29,0.2);
+            color: var(--accent-orange);
+            font-weight: 700;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 4px;
+        }
 
         /* Graph */
         .graph-card { overflow: hidden; }
@@ -161,7 +170,7 @@
         .graph-tooltip.visible { opacity: 1; }
 
         /* Library */
-        .library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 8px; }
+        .library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 8px; }
         .exercise-card { background: rgba(22,27,34,0.8); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; transition: var(--transition); }
         .exercise-card:hover { border-color: rgba(88,166,255,0.4); transform: translateY(-4px); }
         .exercise-card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
@@ -241,6 +250,10 @@
                         <div class="form-group">
                             <label class="form-label" id="valueLabel">🔢 Reps</label>
                             <input type="number" class="form-input" id="exerciseValue" placeholder="e.g. 30" min="1" value="30">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">🔁 Sets</label>
+                            <input type="number" class="form-input" id="exerciseSets" placeholder="e.g. 3" min="1" value="1">
                         </div>
                         <div class="form-group">
                             <label class="form-label">🏋️ Extra Weight (kg) <span style="font-weight:400;text-transform:none;font-size:0.7rem;">(optional)</span></label>
@@ -413,29 +426,36 @@
             );
 
             function getExerciseType(name) { return timeBasedExercises.has(name) ? 'time' : 'reps'; }
-            function formatValue(type, value, weight) {
-                let base = '';
+            function formatValue(type, value, sets, weight) {
+                let base = sets ? `${sets}×` : '';
                 if (type === 'time') {
                     const secs = parseInt(value);
-                    if (secs >= 60) base = `${Math.floor(secs/60)}m ${secs%60}s`;
-                    else base = `${secs}s`;
+                    if (secs >= 60) base += `${Math.floor(secs/60)}m ${secs%60}s`;
+                    else base += `${secs}s`;
                 } else {
-                    base = `${value} reps`;
+                    base += `${value} reps`;
                 }
                 if (weight && weight > 0) base += ` +${weight}kg`;
                 return base;
             }
-            function formatTotal(type, total) {
+            function formatTotal(type, sets, totalValue) {
                 if (type === 'time') {
-                    if (total >= 60) return `${Math.floor(total/60)}m ${total%60}s`;
-                    return `${total}s`;
+                    if (totalValue >= 60) return `${sets} sets · ${Math.floor(totalValue/60)}m ${totalValue%60}s`;
+                    return `${sets} sets · ${totalValue}s`;
                 } else {
-                    return `${total} reps`;
+                    return `${sets} sets · ${totalValue} reps`;
                 }
             }
 
             function loadData() {
                 try { workoutData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e){ workoutData = {}; }
+                // Ensure every exercise has a sets field (default 1)
+                for (const dateStr in workoutData) {
+                    workoutData[dateStr] = workoutData[dateStr].map(ex => ({
+                        ...ex,
+                        sets: ex.sets || 1
+                    }));
+                }
             }
             function saveData() {
                 try { localStorage.setItem(STORAGE_KEY, JSON.stringify(workoutData)); } catch(e){ showToast('⚠️ Storage full'); }
@@ -469,7 +489,6 @@
                 if (page === 'planner') { renderCalendar(); updateExercisePanel(); }
             };
 
-            // ---------- SEARCH FUNCTIONALITY ----------
             window.filterExerciseSelect = function() {
                 const query = document.getElementById('exerciseSearch').value.toLowerCase().trim();
                 const select = document.getElementById('exerciseSelect');
@@ -483,7 +502,6 @@
                         ${timeGroup.map(ex => `<option value="${ex.name}">${ex.name}</option>`).join('')}
                     </optgroup>
                 `;
-                // If the currently selected option is not in the new list, reset to first available
                 if (select.options.length > 0) {
                     select.selectedIndex = 0;
                     onExerciseChange();
@@ -518,8 +536,9 @@
                     const exercises = workoutData[dateStr];
                     exercises.forEach(ex => {
                         const name = ex.exercise;
-                        if (!totals[name]) totals[name] = { type: ex.type, total: 0 };
-                        totals[name].total += ex.value;
+                        if (!totals[name]) totals[name] = { type: ex.type, totalSets: 0, totalValue: 0 };
+                        totals[name].totalSets += ex.sets || 1;
+                        totals[name].totalValue += (ex.sets || 1) * ex.value;
                     });
                 }
                 return totals;
@@ -532,7 +551,7 @@
                     const diffPercent = (ex.difficulty / 10) * 100;
                     const typeBadge = ex.type === 'time' ? '<span class="exercise-type-badge badge-time">⏱ Time</span>' : '<span class="exercise-type-badge badge-reps">🔁 Reps</span>';
                     const exTotal = totals[ex.name];
-                    const totalDisplay = exTotal ? formatTotal(ex.type, exTotal.total) : (ex.type === 'time' ? '0s' : '0 reps');
+                    const totalDisplay = exTotal ? formatTotal(ex.type, exTotal.totalSets, exTotal.totalValue) : (ex.type === 'time' ? '0 sets · 0s' : '0 sets · 0 reps');
                     return `<div class="exercise-card">
                         <div class="exercise-card-header">
                             <span class="exercise-card-title">${ex.name}</span>
@@ -632,6 +651,7 @@
                     list.innerHTML = exercises.map(ex => {
                         const weight = ex.weight || 0;
                         const weightDisplay = weight > 0 ? ` <span class="exercise-weight">+${weight}kg</span>` : '';
+                        const setsDisplay = ex.sets ? `<span class="sets-badge">${ex.sets}×</span>` : '';
                         return `
                         <li class="exercise-item">
                             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
@@ -640,6 +660,7 @@
                                 <span class="exercise-type-badge ${ex.type==='time'?'badge-time':'badge-reps'}">${ex.type==='time'?'⏱ Time':'🔁 Reps'}</span>
                             </div>
                             <div style="display:flex;align-items:center;gap:6px;">
+                                ${setsDisplay}
                                 <span class="exercise-value">${formatValue(ex.type, ex.value)}</span>${weightDisplay}
                                 <button class="btn-delete" onclick="deleteExercise('${selectedDate}','${ex.id}')">🗑</button>
                             </div>
@@ -676,14 +697,17 @@
                 const time = document.getElementById('exerciseTime').value;
                 const exercise = document.getElementById('exerciseSelect').value;
                 const value = parseInt(document.getElementById('exerciseValue').value);
+                const setsInput = document.getElementById('exerciseSets').value;
+                const sets = setsInput === '' ? 1 : parseInt(setsInput);
                 const weightInput = document.getElementById('exerciseWeight').value;
                 const weight = weightInput === '' ? 0 : parseFloat(weightInput);
                 const type = getExerciseType(exercise);
 
                 if (!time) { showToast('Pick a time'); return; }
                 if (!value || value < 1) { showToast('Enter valid number'); return; }
+                if (!sets || sets < 1) { showToast('Enter valid sets'); return; }
 
-                const newEx = { id: generateId(), time, exercise, type, value, weight: weight || 0 };
+                const newEx = { id: generateId(), time, exercise, type, value, sets, weight: weight || 0 };
                 const arr = getExercisesForDate(selectedDate);
                 arr.push(newEx);
                 arr.sort((a,b) => a.time.localeCompare(b.time));
@@ -691,6 +715,7 @@
                 renderCalendar();
                 updateExercisePanel();
                 document.getElementById('exerciseWeight').value = '';
+                document.getElementById('exerciseSets').value = '1';
                 showToast(`✅ Added ${exercise}`);
             };
 
